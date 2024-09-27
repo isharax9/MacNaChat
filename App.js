@@ -44,7 +44,7 @@ export default function LoginScreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
-          <Image source={require('./assets/logo.png')} style={styles.logo} />
+          <Image source={require('./assets/logo.gif')} style={styles.logo} />
           <Text style={styles.title}>Sign Up</Text>
           <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
 
@@ -81,7 +81,7 @@ export default function LoginScreen() {
               let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [4, 3],
+                aspect: [1,1],
                 quality: 1,
               });
 
@@ -126,11 +126,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   logo: {
-    width: '70%',
-    height: undefined,
+    width: '100%',
+    height: "undefined",
     aspectRatio: 2,
     alignSelf: 'center',
-    marginBottom: 20,
+    marginBottom: 5,
     contentFit: 'contain',
   },
   title: {
