@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, Image, } from 'react-native';
+import { Text, TextInput, StyleSheet, Pressable, Image } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native';
 
 import * as SplashScreen from 'expo-splash-screen';
@@ -29,48 +30,51 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
-        <Text style={styles.title}>Sign Up</Text>
-        <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
 
-        <TextInput
-          style={[styles.input, focusedInput === 'firstName' && styles.inputFocused]}
-          placeholder="First Name"
-          onFocus={() => setFocusedInput('firstName')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'lastName' && styles.inputFocused]}
-          placeholder="Last Name"
-          onFocus={() => setFocusedInput('lastName')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
-          placeholder="Mobile"
-          keyboardType="numeric"
-          onFocus={() => setFocusedInput('mobile')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
-          placeholder="Password"
-          secureTextEntry={true}
-          onFocus={() => setFocusedInput('password')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        
-        <Pressable style={styles.buttonContainer} onPress={() => { console.log("Sign Up button pressed"); }}>
-          <FontAwesome name="arrow-right" size={18} color="#fff" />
-          <Text style={styles.buttontext}>SIGN UP</Text>
-        </Pressable>
+        <LinearGradient
+        colors={["#ecffb3", "#f5ccff"]}
+          style={styles.container}
+        >
+          <Image source={require('./assets/logo.png')} style={styles.logo} />
+          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
 
-        <Pressable style={styles.signInButton} onPress={() => { console.log("Sign In button pressed"); }}>
-          <Text style={styles.signInText}>Already have an account? Sign In here</Text>
-        </Pressable>
+          <TextInput
+            style={[styles.input, focusedInput === 'firstName' && styles.inputFocused]}
+            placeholder="First Name"
+            onFocus={() => setFocusedInput('firstName')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'lastName' && styles.inputFocused]}
+            placeholder="Last Name"
+            onFocus={() => setFocusedInput('lastName')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
+            placeholder="Mobile"
+            keyboardType="numeric"
+            onFocus={() => setFocusedInput('mobile')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
+            placeholder="Password"
+            secureTextEntry={true}
+            onFocus={() => setFocusedInput('password')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          
+          <Pressable style={styles.buttonContainer} onPress={() => { console.log("Sign Up button pressed"); }}>
+            <FontAwesome name="arrow-right" size={18} color="#fff" />
+            <Text style={styles.buttontext}>SIGN UP</Text>
+          </Pressable>
 
-      </View>
+          <Pressable style={styles.signInButton} onPress={() => { console.log("Sign In button pressed"); }}>
+            <Text style={styles.signInText}>Already have an account? Sign In here</Text>
+          </Pressable>
+        </LinearGradient>
     </SafeAreaView>
   );
 }
