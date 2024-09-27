@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -42,68 +42,70 @@ export default function LoginScreen() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
-      <View style={styles.container}>
-        <Image source={require('./assets/logo.png')} style={styles.logo} />
-        <Text style={styles.title}>Sign Up</Text>
-        <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.container}>
+          <Image source={require('./assets/logo.png')} style={styles.logo} />
+          <Text style={styles.title}>Sign Up</Text>
+          <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
 
-        <TextInput
-          style={[styles.input, focusedInput === 'firstName' && styles.inputFocused]}
-          placeholder="First Name"
-          onFocus={() => setFocusedInput('firstName')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'lastName' && styles.inputFocused]}
-          placeholder="Last Name"
-          onFocus={() => setFocusedInput('lastName')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
-          placeholder="Mobile"
-          keyboardType="numeric"
-          onFocus={() => setFocusedInput('mobile')}
-          onBlur={() => setFocusedInput(null)}
-        />
-        <TextInput
-          style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
-          placeholder="Password"
-          secureTextEntry={true}
-          onFocus={() => setFocusedInput('password')}
-          onBlur={() => setFocusedInput(null)}
-        />
+          <TextInput
+            style={[styles.input, focusedInput === 'firstName' && styles.inputFocused]}
+            placeholder="First Name"
+            onFocus={() => setFocusedInput('firstName')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'lastName' && styles.inputFocused]}
+            placeholder="Last Name"
+            onFocus={() => setFocusedInput('lastName')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
+            placeholder="Mobile"
+            keyboardType="numeric"
+            onFocus={() => setFocusedInput('mobile')}
+            onBlur={() => setFocusedInput(null)}
+          />
+          <TextInput
+            style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
+            placeholder="Password"
+            secureTextEntry={true}
+            onFocus={() => setFocusedInput('password')}
+            onBlur={() => setFocusedInput(null)}
+          />
 
-        <Pressable
-          style={styles.imguploadContainer}
-          onPress={async () => {
-            let result = await ImagePicker.launchImageLibraryAsync({
-              mediaTypes: ImagePicker.MediaTypeOptions.Images,
-              allowsEditing: true,
-              aspect: [4, 3],
-              quality: 1,
-            });
+          <Pressable
+            style={styles.imguploadContainer}
+            onPress={async () => {
+              let result = await ImagePicker.launchImageLibraryAsync({
+                mediaTypes: ImagePicker.MediaTypeOptions.Images,
+                allowsEditing: true,
+                aspect: [4, 3],
+                quality: 1,
+              });
 
-            if (!result.canceled) {
-              setImage(result.assets[0].uri);
-            }
-          }}
-        >
-          <FontAwesome name="upload" size={16} color="#fff" />
-          <Text style={styles.buttontext1}>Select a Profile Image</Text>
-        </Pressable>
+              if (!result.canceled) {
+                setImage(result.assets[0].uri);
+              }
+            }}
+          >
+            <FontAwesome name="upload" size={16} color="#fff" />
+            <Text style={styles.buttontext1}>Select a Profile Image</Text>
+          </Pressable>
 
-        {getImage && <ProfileImage uri={getImage} />}
+          {getImage && <ProfileImage uri={getImage} />}
 
-        <Pressable style={styles.buttonContainer} onPress={() => { console.log("Sign Up button pressed"); }}>
-          <FontAwesome name="arrow-right" size={18} color="#fff" />
-          <Text style={styles.buttontext}>SIGN UP Your Account</Text>
-        </Pressable>
+          <Pressable style={styles.buttonContainer} onPress={() => { console.log("Sign Up button pressed"); }}>
+            <FontAwesome name="arrow-right" size={18} color="#fff" />
+            <Text style={styles.buttontext}>SIGN UP YOUR ACCOUNT</Text>
+          </Pressable>
 
-        <Pressable style={styles.signInButton} onPress={() => { console.log("Sign In button pressed"); }}>
-          <Text style={styles.signInText}>Already have an account? Sign In here</Text>
-        </Pressable>
-      </View>
+          <Pressable style={styles.signUpButton} onPress={() => { console.log("Sign In button pressed"); }}>
+            <Text style={styles.signInText}>Already have an account? Sign In here</Text>
+          </Pressable>
+        </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -113,10 +115,14 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fff',
   },
+  scrollViewContent: {
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 20,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 20,
     backgroundColor: '#fff',
   },
   logo: {
@@ -186,7 +192,7 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontFamily: 'SourceCodePro-Bold',
   },
-  signInButton: {
+  signUpButton: {
     marginTop: 20,
     alignItems: 'center',
   },
@@ -201,8 +207,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   profileImage: {
-    width: 100,
-    height: 100,
+    width: 200,
+    height: 200,
     borderRadius: 10,
     marginBottom: 10,
   },
