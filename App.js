@@ -9,6 +9,7 @@ import FontAwesome from "@expo/vector-icons/FontAwesome";
 
 SplashScreen.preventAutoHideAsync();
 
+
 const ProfileImage = ({ uri }) => {
   return (
     <View style={styles.profileImageContainer}>
@@ -21,6 +22,13 @@ const ProfileImage = ({ uri }) => {
 export default function LoginScreen() {
 
   const [getImage, setImage] = useState(null);
+
+  const [getMobile, setMobile] = useState("");
+  const [getFirstName, setFirstName] = useState("");
+
+  const [getLastName, setLastName] = useState("");
+  const [getPassword, setPassword] = useState("");
+
 
   const [loaded, error] = useFonts({
     'SourceCodePro-Bold': require('./assets/fonts/static/SourceCodePro-Bold.ttf'),
@@ -53,12 +61,14 @@ export default function LoginScreen() {
             placeholder="First Name"
             onFocus={() => setFocusedInput('firstName')}
             onBlur={() => setFocusedInput(null)}
+            onChangeText={(text) => setFirstName(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'lastName' && styles.inputFocused]}
             placeholder="Last Name"
             onFocus={() => setFocusedInput('lastName')}
             onBlur={() => setFocusedInput(null)}
+            onChangeText={(text) => setFirstName(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
@@ -66,6 +76,7 @@ export default function LoginScreen() {
             keyboardType="numeric"
             onFocus={() => setFocusedInput('mobile')}
             onBlur={() => setFocusedInput(null)}
+            onChangeText={(text) => setFirstName(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
@@ -73,6 +84,7 @@ export default function LoginScreen() {
             secureTextEntry={true}
             onFocus={() => setFocusedInput('password')}
             onBlur={() => setFocusedInput(null)}
+            onChangeText={(text) => setFirstName(text)}
           />
 
           <Pressable
@@ -81,7 +93,7 @@ export default function LoginScreen() {
               let result = await ImagePicker.launchImageLibraryAsync({
                 mediaTypes: ImagePicker.MediaTypeOptions.Images,
                 allowsEditing: true,
-                aspect: [1,1],
+                aspect: [1, 1],
                 quality: 1,
               });
 
@@ -96,12 +108,43 @@ export default function LoginScreen() {
 
           {getImage && <ProfileImage uri={getImage} />}
 
-          <Pressable style={styles.buttonContainer} onPress={() => { console.log("Sign Up button pressed"); }}>
-            <FontAwesome name="arrow-right" size={18} color="#fff" />
+          <Pressable
+            style={styles.buttonContainer}
+            onPress={async () => {
+              let formData = new FormData();
+              formData.append("mobile", getMobile);
+              formData.append("firstName", getFirstName);
+              formData.append("lastName", getLastName);
+              formData.append("password", getPassword);
+              formData.append("avatarImage", getImage);
+
+              let response = await fetch(
+                "https://b1ba-165-232-169-105.ngrok-free.app/MacNaChat/SignUp",
+                {
+                  method: "POST",
+                  body: formData,
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                }
+              );
+
+              if (response.ok) {
+                let json = await response.json();
+                Alert.alert("Response", json.message);
+              }
+            }}
+          >
+            <FontAwesome name={"arrow-right"} color="white" size={20} />
             <Text style={styles.buttontext}>SIGN UP YOUR ACCOUNT</Text>
           </Pressable>
 
-          <Pressable style={styles.signUpButton} onPress={() => { console.log("Sign In button pressed"); }}>
+          <Pressable
+            style={styles.signUpButton}
+            onPress={() => {
+              console.log("Sign In button pressed");
+            }}
+          >
             <Text style={styles.signInText}>Already have an account? Sign In here</Text>
           </Pressable>
         </View>
