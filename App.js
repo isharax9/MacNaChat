@@ -21,7 +21,7 @@ const ProfileImage = ({ uri }) => {
 
 export default function LoginScreen() {
 
-  const [getImage, setImage] = useState(null);
+  const [getImage, setImage] = useState();
 
   const [getMobile, setMobile] = useState("");
   const [getFirstName, setFirstName] = useState("");
@@ -106,29 +106,30 @@ export default function LoginScreen() {
             <Text style={styles.buttontext1}>Select a Profile Image</Text>
           </Pressable>
 
-          {getImage && <ProfileImage uri={getImage} />}
+          {getImage ? <ProfileImage uri={getImage} /> : null}
 
           <Pressable
             style={styles.buttonContainer}
             onPress={async () => {
-              console.log("Button pressed");
+              let formData = new FormData();
+              formData.append("mobile", getMobile);
+              formData.append("firstName", getFirstName);
+              formData.append("lastName", getLastName);
+              formData.append("password", getPassword);
+              formData.append("avatarImage", {
+                uri: getImage,
+                type: "image/png",
+                name: "image.png",
+              });
+
+
+              console.log("SignUp Button pressed");
               let response = await fetch(
                 "https://f668-2402-d000-8110-3b7a-4830-93c3-73f9-ea31.ngrok-free.app/MacNaChat/SignUp",
                 {
                   method: "POST",
-                  body: JSON.stringify(
-                    {
-                    firstName: getFirstName,
-                    lastName: getLastName,
-                    mobile: getMobile,
-                    password: getPassword,
-                    image: getImage,
-                    message: "Hello from Expo!"
-                    }
-                ),
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
+                  body:formData
+              
                 }
               );
 
