@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -21,7 +21,7 @@ const ProfileImage = ({ uri }) => {
 
 export default function LoginScreen() {
 
-  const [getImage, setImage] = useState(null);
+  const [getImage, setImage] = useState();
 
   const [getMobile, setMobile] = useState("");
   const [getFirstName, setFirstName] = useState("");
@@ -68,7 +68,7 @@ export default function LoginScreen() {
             placeholder="Last Name"
             onFocus={() => setFocusedInput('lastName')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setLastName(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
@@ -76,7 +76,7 @@ export default function LoginScreen() {
             keyboardType="numeric"
             onFocus={() => setFocusedInput('mobile')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setMobile(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
@@ -84,7 +84,7 @@ export default function LoginScreen() {
             secureTextEntry={true}
             onFocus={() => setFocusedInput('password')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setPassword(text)}
           />
 
           <Pressable
@@ -106,7 +106,7 @@ export default function LoginScreen() {
             <Text style={styles.buttontext1}>Select a Profile Image</Text>
           </Pressable>
 
-          {getImage && <ProfileImage uri={getImage} />}
+          {getImage ? <ProfileImage uri={getImage} /> : null}
 
           <Pressable
             style={styles.buttonContainer}
@@ -116,16 +116,20 @@ export default function LoginScreen() {
               formData.append("firstName", getFirstName);
               formData.append("lastName", getLastName);
               formData.append("password", getPassword);
-              formData.append("avatarImage", getImage);
+              formData.append("avatarImage", {
+                uri: getImage,
+                type: "image/png",
+                name: "image.png",
+              });
 
+
+              console.log("SignUp Button pressed");
               let response = await fetch(
-                "https://b1ba-165-232-169-105.ngrok-free.app/MacNaChat/SignUp",
+                "https://f668-2402-d000-8110-3b7a-4830-93c3-73f9-ea31.ngrok-free.app/MacNaChat/SignUp",
                 {
                   method: "POST",
-                  body: formData,
-                  headers: {
-                    "Content-Type": "application/json",
-                  },
+                  body: formData
+
                 }
               );
 
