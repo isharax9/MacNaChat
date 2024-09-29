@@ -68,7 +68,7 @@ export default function LoginScreen() {
             placeholder="Last Name"
             onFocus={() => setFocusedInput('lastName')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setLastName(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'mobile' && styles.inputFocused]}
@@ -76,7 +76,7 @@ export default function LoginScreen() {
             keyboardType="numeric"
             onFocus={() => setFocusedInput('mobile')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setMobile(text)}
           />
           <TextInput
             style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
@@ -84,7 +84,7 @@ export default function LoginScreen() {
             secureTextEntry={true}
             onFocus={() => setFocusedInput('password')}
             onBlur={() => setFocusedInput(null)}
-            onChangeText={(text) => setFirstName(text)}
+            onChangeText={(text) => setPassword(text)}
           />
 
           <Pressable
@@ -116,7 +116,16 @@ export default function LoginScreen() {
                 "https://f668-2402-d000-8110-3b7a-4830-93c3-73f9-ea31.ngrok-free.app/MacNaChat/SignUp",
                 {
                   method: "POST",
-                  body: JSON.stringify({message: "Hello from Expo!"}),
+                  body: JSON.stringify(
+                    {
+                    firstName: getFirstName,
+                    lastName: getLastName,
+                    mobile: getMobile,
+                    password: getPassword,
+                    image: getImage,
+                    message: "Hello from Expo!"
+                    }
+                ),
                   headers: {
                     "Content-Type": "application/json",
                   },
