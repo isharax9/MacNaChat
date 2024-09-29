@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView,Alert } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
@@ -10,8 +10,8 @@ import { registerRootComponent } from 'expo';
 SplashScreen.preventAutoHideAsync();
 
 function SignInscreen() {
-  const [, setMobile] = useState("");
-  const [, setPassword] = useState("");
+  const [getmobile, setMobile] = useState("");
+  const [getpassword, setPassword] = useState("");
 
   const [loaded, error] = useFonts({
     'SourceCodePro-Bold': require('./assets/fonts/static/SourceCodePro-Bold.ttf'),
@@ -58,18 +58,49 @@ function SignInscreen() {
 
           <Pressable
             style={styles.buttonContainer}
-            onPress={() => {
-              console.log("Sign In Button pressed");
-              // Add your sign in logic here
-            }}
-          >
-            <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
-            <Text style={styles.buttontext}>SIGN IN</Text>
-          </Pressable>
+            onPress={async () => {
+              console.log("Sign In button pressed");
+              try {
+                let response = await fetch(
+                  "https://09d9-165-232-169-105.ngrok-free.app/MacNaChat/SignIn",
+                  {
+                    method: "POST",
+                    body: JSON.stringify({
+                      mobile: getmobile,
+                      password: getpassword,
+                    }),
+                    headers: {
+                      "Content-Type": "application/json",
+                    }
+                  }
+                );
 
-          <Pressable
-            style={styles.signUpButton}
-            onPress={() => {
+                if (response.ok) {
+                  let json = await response.json();
+                  if (json.success) {
+                  // User signed in successfully
+                    // User sign in success
+                    let user = json.user;
+                    Alert.alert("Success", "Hi " + user.first_name + " " + user.last_name + ", " + json.message);
+                    console.log("User signed in successfully");
+                  } else {
+                  Alert.alert("Error", json.message);
+                  }
+                } else {
+                  Alert.alert("Error", "Failed to sign in");
+                }
+                } catch (error) {
+                Alert.alert("Error", "Network error occurred");
+                }
+              }}
+              >
+              <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
+              <Text style={styles.buttontext}>SIGN IN</Text>
+              </Pressable>
+
+              <Pressable
+              style={styles.signUpButton}
+              onPress={() => {
               console.log("Sign Up button pressed");
               // Add navigation to sign up page here
             }}
