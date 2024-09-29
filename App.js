@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
@@ -111,18 +111,12 @@ export default function LoginScreen() {
           <Pressable
             style={styles.buttonContainer}
             onPress={async () => {
-              let formData = new FormData();
-              formData.append("mobile", getMobile);
-              formData.append("firstName", getFirstName);
-              formData.append("lastName", getLastName);
-              formData.append("password", getPassword);
-              formData.append("avatarImage", getImage);
-
+              console.log("Button pressed");
               let response = await fetch(
-                "https://b1ba-165-232-169-105.ngrok-free.app/MacNaChat/SignUp",
+                "https://f668-2402-d000-8110-3b7a-4830-93c3-73f9-ea31.ngrok-free.app/MacNaChat/SignUp",
                 {
                   method: "POST",
-                  body: formData,
+                  body: JSON.stringify({message: "Hello from Expo!"}),
                   headers: {
                     "Content-Type": "application/json",
                   },
