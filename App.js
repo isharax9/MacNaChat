@@ -5,7 +5,7 @@ import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as SplashScreen from 'expo-splash-screen';
-import FontAwesome from "@expo/vector-icons/FontAwesome";
+import {FontAwesome6} from "@expo/vector-icons";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -36,7 +36,7 @@ export default function LoginScreen() {
     'SourceCodePro-VariableFont_wght': require('./assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
   });
 
-  const [focusedInput, setFocusedInput] = useState(null);
+  const [focusedInput, setFocusedInput] = useState();
 
   useEffect(() => {
     if (loaded || error) {
@@ -102,7 +102,7 @@ export default function LoginScreen() {
               }
             }}
           >
-            <FontAwesome name="upload" size={16} color="#fff" />
+            <FontAwesome6 name="upload" size={16} color="#fff" />
             <Text style={styles.buttontext1}>Select a Profile Image</Text>
           </Pressable>
 
@@ -116,32 +116,47 @@ export default function LoginScreen() {
               formData.append("firstName", getFirstName);
               formData.append("lastName", getLastName);
               formData.append("password", getPassword);
+
+              // Corrected the image check
+              if (getImage != null) {
+                
+              
+
               formData.append("avatarImage", {
                 uri: getImage,
                 type: "image/png",
                 name: "image.png",
-              });
-
+              });}
 
               console.log("SignUp Button pressed");
-              let response = await fetch(
-                "https://f668-2402-d000-8110-3b7a-4830-93c3-73f9-ea31.ngrok-free.app/MacNaChat/SignUp",
-                {
-                  method: "POST",
-                  body: formData
+              try {
+                let response = await fetch(
+                  "https://c21a-2407-c00-c001-dc07-89f0-8b2d-3a1a-2145.ngrok-free.app/MacNaChat/SignUp",
+                  {
+                    method: "POST",
+                    body: formData
+                  }
+                );
 
+                if (response.ok) {
+                  let json = await response.json();
+                  if (json.success) {
+                    Alert.alert("Success", json.message);
+                  } else {
+                    Alert.alert("Error", json.message);
+                  }
+                } else {
+                  Alert.alert("Error", "Failed to register");
                 }
-              );
-
-              if (response.ok) {
-                let json = await response.json();
-                Alert.alert("Response", json.message);
+              } catch (error) {
+                Alert.alert("Error", "Network error occurred");
               }
             }}
           >
-            <FontAwesome name={"arrow-right"} color="white" size={20} />
+            <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
             <Text style={styles.buttontext}>SIGN UP YOUR ACCOUNT</Text>
           </Pressable>
+
 
           <Pressable
             style={styles.signUpButton}
