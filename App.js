@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as SplashScreen from 'expo-splash-screen';
 import {FontAwesome6} from "@expo/vector-icons";
+import { registerRootComponent } from 'expo';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -19,7 +20,7 @@ const ProfileImage = ({ uri }) => {
   );
 };
 
-export default function LoginScreen() {
+export default function SignUpscreen() {
 
   const [getImage, setImage] = useState();
 
@@ -131,7 +132,7 @@ export default function LoginScreen() {
               console.log("SignUp Button pressed");
               try {
                 let response = await fetch(
-                  "https://86f3-2402-d000-8110-3b7a-ddf1-7bf8-50bd-48bf.ngrok-free.app/MacNaChat/SignUp",
+                  "https://cardinal-above-physically.ngrok-free.app/MacNaChat/SignUp",
                   {
                     method: "POST",
                     body: formData
@@ -171,7 +172,7 @@ export default function LoginScreen() {
     </SafeAreaView>
   );
 }
-
+registerRootComponent(SignUpscreen);
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
