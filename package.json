@@ -1,7 +1,7 @@
 {
   "name": "macnachat",
   "version": "1.0.0",
-  "main": "./SignIn.js",
+  "main": "./Home.js",
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",

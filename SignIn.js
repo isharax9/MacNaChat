@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
 import {FontAwesome6} from "@expo/vector-icons";
 import { registerRootComponent } from 'expo';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -74,25 +75,34 @@ function SignInscreen() {
                     }
                   }
                 );
-
+          
                 if (response.ok) {
                   let json = await response.json();
                   if (json.success) {
-                  // User signed in successfully
-                    // User sign in success
+                    // User signed in successfully
                     let user = json.user;
                     Alert.alert("Success", "Hi " + user.first_name + " " + user.last_name + ", " + json.message);
                     console.log("User signed in successfully");
+
+                    // Save user data to AsyncStorage
+                    try {
+                      await AsyncStorage.setItem("user", JSON.stringify(user));
+                      console.log("User data saved to AsyncStorage");
+                    } catch (error) {
+                      console.error("Error saving user data to AsyncStorage:", error);
+                    }
+
+
                   } else {
-                  Alert.alert("Error", json.message);
+                    Alert.alert("Error", json.message);
                   }
                 } else {
                   Alert.alert("Error", "Failed to sign in");
                 }
-                } catch (error) {
+              } catch (error) {
                 Alert.alert("Error", "Network error occurred");
-                }
-              }}
+              }
+            }}
               >
               <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
               <Text style={styles.buttontext}>SIGN IN</Text>
