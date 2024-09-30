@@ -2,31 +2,57 @@ import { registerRootComponent } from 'expo';
 import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { FontAwesome6 } from "@expo/vector-icons";
 
 const HomePage = () => {
-    // Sample data for chats with online status
+    // Sample data for chats with online status and message seen status
     const chatData = [
-        { id: '1', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true },
-        { id: '2', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false },
-        { id: '3', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: true },
-        { id: '4', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: false },
-        { id: '5', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: true },
-        { id: '6', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: false },
-        { id: '7', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true },
-        { id: '8', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false },
-        { id: '9', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: true },
+        { id: '1', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
+        { id: '2', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false, isSeen: false },
+        { id: '3', name: 'Charlie', lastMessage: 'Let’s meet up!kkkkkkkffgghhllii', time: 'Yesterday', isOnline: true, isSeen: true },
+        { id: '4', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: false, isSeen: false },
+        { id: '5', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: true, isSeen: true },
+        { id: '6', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: false, isSeen: false },
+        { id: '7', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
+        { id: '8', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false, isSeen: false },
+        { id: '9', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: true, isSeen: true },
     ];
+
+    // Function to truncate long messages
+    const truncateMessage = (message, maxLength) => {
+        if (message.length > maxLength) {
+            return message.substring(0, maxLength) + '***';
+        }
+        return message;
+    };
 
     // Render function for each chat item
     const renderChatItem = ({ item }) => (
         <View style={styles.chatItem}>
-            {/* Dynamic border color for online/offline status */}
-            <View style={[styles.chatAvatar, { borderColor: item.isOnline ? 'yellow' : 'black' }]} />
+            <View style={styles.avatarContainer}>
+                {/* Placeholder avatar */}
+                <View style={styles.chatAvatar} />
+
+                {/* Online/Offline status text */}
+                <Text style={[styles.statusText, { backgroundColor: item.isOnline ? 'green' : 'gray' }]}>
+                    {item.isOnline ? 'online' : 'offline'}
+                </Text>
+            </View>
             <View style={styles.chatContent}>
                 <Text style={styles.chatName}>{item.name}</Text>
-                <Text style={styles.chatMessage}>{item.lastMessage}</Text>
+                <Text style={styles.chatMessage} numberOfLines={1} ellipsizeMode="tail">
+                    {truncateMessage(item.lastMessage, 30)}
+                </Text>
             </View>
+
             <Text style={styles.chatTime}>{item.time}</Text>
+
+            {/* Render icon based on whether the message is seen or not */}
+            {item.isSeen ? (
+                <FontAwesome6 name="check-double" size={16} color="blue" /> // Seen: double check in blue
+            ) : (
+                <FontAwesome6 name="check" size={16} color="#888" /> // Not Seen: single check in gray
+            )}
         </View>
     );
 
@@ -101,13 +127,31 @@ const styles = StyleSheet.create({
         padding: 15,
         borderRadius: 8,
         marginBottom: 10,
+        columnGap: 10,
+    },
+    avatarContainer: {
+        position: 'relative',
+        justifyContent: 'center',
+        alignItems: 'center',
+        
     },
     chatAvatar: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        borderWidth: 2,
         backgroundColor: '#ccc', // Placeholder for avatar image
+    },
+    statusText: {
+        position: 'absolute',
+        bottom: -5,
+        left: 0,
+        color: 'white',
+        fontSize: 10,
+        paddingHorizontal: 5,
+        paddingVertical: 2,
+        borderRadius: 5,
+        overflow: 'hidden',
+        
     },
     chatContent: {
         flex: 1,
@@ -120,6 +164,7 @@ const styles = StyleSheet.create({
     chatMessage: {
         fontSize: 14,
         color: '#555',
+        overflow: 'hidden',
     },
     chatTime: {
         color: 'red', // Color for date/time
