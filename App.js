@@ -131,7 +131,7 @@ export default function LoginScreen() {
               console.log("SignUp Button pressed");
               try {
                 let response = await fetch(
-                  "https://09d9-165-232-169-105.ngrok-free.app/MacNaChat/SignUp",
+                  "https://86f3-2402-d000-8110-3b7a-ddf1-7bf8-50bd-48bf.ngrok-free.app/MacNaChat/SignUp",
                   {
                     method: "POST",
                     body: formData
