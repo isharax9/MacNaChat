@@ -8,6 +8,7 @@ import {FontAwesome6} from "@expo/vector-icons";
 import { registerRootComponent } from 'expo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -35,6 +36,7 @@ export default function index() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
           <Image source={require('../assets/logo.gif')} style={styles.logo} />

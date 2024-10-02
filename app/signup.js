@@ -7,6 +7,7 @@ import * as ImagePicker from 'expo-image-picker';
 import * as SplashScreen from 'expo-splash-screen';
 import {FontAwesome6} from "@expo/vector-icons";
 import { router } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
 import { registerRootComponent } from 'expo';
 
 SplashScreen.preventAutoHideAsync();
@@ -52,6 +53,7 @@ export default function signup() {
 
   return (
     <SafeAreaView style={styles.safeArea}>
+      <StatusBar translucent={true} backgroundColor="transparent" />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
           <Image source={require('../assets/logo.gif')} style={styles.logo} />

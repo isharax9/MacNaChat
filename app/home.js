@@ -3,6 +3,7 @@ import React from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome6 } from "@expo/vector-icons";
+import { StatusBar } from 'expo-status-bar';
 
 function Home() {
     // Sample data for chats with online status and message seen status
@@ -28,6 +29,7 @@ function Home() {
 
     // Render function for each chat item
     const renderChatItem = ({ item }) => (
+
         <View style={styles.chatItem}>
             <View style={styles.avatarContainer}>
                 {/* Placeholder avatar */}
@@ -58,6 +60,7 @@ function Home() {
 
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar translucent={true} backgroundColor="black" />
             {/* Top Section with logged-in user details */}
             <View style={styles.userInfo}>
                 <View style={styles.userAvatar} />
@@ -91,6 +94,7 @@ const styles = StyleSheet.create({
         padding: 15,
         backgroundColor: '#fff',
         marginBottom: 10,
+        marginTop: 0,
         marginHorizontal: 7,
         borderRadius: 8,
     },
