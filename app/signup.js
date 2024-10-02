@@ -6,6 +6,7 @@ import { Image } from 'expo-image';
 import * as ImagePicker from 'expo-image-picker';
 import * as SplashScreen from 'expo-splash-screen';
 import {FontAwesome6} from "@expo/vector-icons";
+import { router } from 'expo-router';
 import { registerRootComponent } from 'expo';
 
 SplashScreen.preventAutoHideAsync();
@@ -162,6 +163,7 @@ export default function signup() {
           <Pressable
             style={styles.signUpButton}
             onPress={() => {
+              router.replace("/");
               console.log("Sign In button pressed");
             }}
           >

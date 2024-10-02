@@ -7,6 +7,7 @@ import * as SplashScreen from 'expo-splash-screen';
 import {FontAwesome6} from "@expo/vector-icons";
 import { registerRootComponent } from 'expo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { router } from 'expo-router';
 
 SplashScreen.preventAutoHideAsync();
 
@@ -111,7 +112,9 @@ export default function index() {
               <Pressable
               style={styles.signUpButton}
               onPress={() => {
+                router.replace("/signup");
               console.log("Sign Up button pressed");
+
               // Add navigation to sign up page here
             }}
           >
