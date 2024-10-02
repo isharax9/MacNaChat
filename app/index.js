@@ -13,6 +13,9 @@ import { StatusBar } from 'expo-status-bar';
 SplashScreen.preventAutoHideAsync();
 
 export default function index() {
+
+  console.log("index");
+
   const [getmobile, setMobile] = useState("");
   const [getpassword, setPassword] = useState("");
 
@@ -22,19 +25,39 @@ export default function index() {
     'SourceCodePro-VariableFont_wght': require('../assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
   });
 
+  useEffect(() => {
+    console.log("Checking user...");
+    const checkUser = async () => {
+      try {
+        const user = await AsyncStorage.getItem('user');
+        if (user!== null) {
+          router.replace('/home');
+        }
+      } catch (error) {
+        console.error("Error checking user:", error);
+      }
+    };
+
+    checkUser();
+  }, []);
+
   const [focusedInput, setFocusedInput] = useState();
 
   useEffect(() => {
+
+    console.log("splash screen");
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);
 
   if (!loaded && !error) {
+    console.log("last");
     return null;
   }
 
   return (
+    
     <SafeAreaView style={styles.safeArea}>
       <StatusBar translucent={true} backgroundColor="transparent" />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -93,6 +116,7 @@ export default function index() {
                       await AsyncStorage.setItem("user", JSON.stringify(user));
                       router.replace("/home");
                       console.log("User data saved to AsyncStorage");
+                      console.log("User Redirected to Home Screen");
                     } catch (error) {
                       console.error("Error saving user data to AsyncStorage:", error);
                     }
