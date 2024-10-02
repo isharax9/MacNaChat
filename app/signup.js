@@ -144,6 +144,7 @@ export default function signup() {
                   let json = await response.json();
                   if (json.success) {
                     Alert.alert("Success", json.message);
+                    router.replace("/");
                   } else {
                     Alert.alert("Error", json.message);
                   }

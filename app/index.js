@@ -60,7 +60,7 @@ export default function index() {
 
           <Pressable
             style={styles.buttonContainer}
-            onPress={async () => {
+            onPress={async () => {              
               console.log("Sign In button pressed");
               try {
                 let response = await fetch(
@@ -83,11 +83,13 @@ export default function index() {
                     // User signed in successfully
                     let user = json.user;
                     Alert.alert("Success", "Hi " + user.first_name + " " + user.last_name + ", " + json.message);
+                    
                     console.log("User signed in successfully");
 
                     // Save user data to AsyncStorage
                     try {
                       await AsyncStorage.setItem("user", JSON.stringify(user));
+                      router.replace("/home");
                       console.log("User data saved to AsyncStorage");
                     } catch (error) {
                       console.error("Error saving user data to AsyncStorage:", error);
