@@ -4,7 +4,7 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome6 } from "@expo/vector-icons";
 
-const HomePage = () => {
+function Home() {
     // Sample data for chats with online status and message seen status
     const chatData = [
         { id: '1', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
@@ -73,13 +73,12 @@ const HomePage = () => {
                 data={chatData}
                 renderItem={renderChatItem}
                 keyExtractor={item => item.id}
-                contentContainerStyle={styles.chatList}
-            />
+                contentContainerStyle={styles.chatList} />
         </SafeAreaView>
     );
-};
+}
 
-registerRootComponent(HomePage);
+
 
 const styles = StyleSheet.create({
     container: {
@@ -172,4 +171,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default HomePage;
+export default Home;

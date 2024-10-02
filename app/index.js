@@ -10,14 +10,14 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 SplashScreen.preventAutoHideAsync();
 
-function SignInscreen() {
+export default function index() {
   const [getmobile, setMobile] = useState("");
   const [getpassword, setPassword] = useState("");
 
   const [loaded, error] = useFonts({
-    'SourceCodePro-Bold': require('./assets/fonts/static/SourceCodePro-Bold.ttf'),
-    'PressStart2P-Regular': require('./assets/fonts/PressStart2P-Regular.ttf'),
-    'SourceCodePro-VariableFont_wght': require('./assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
+    'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
+    'PressStart2P-Regular': require('../assets/fonts/PressStart2P-Regular.ttf'),
+    'SourceCodePro-VariableFont_wght': require('../assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
   });
 
   const [focusedInput, setFocusedInput] = useState();
@@ -36,7 +36,7 @@ function SignInscreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
-          <Image source={require('./assets/logo.gif')} style={styles.logo} />
+          <Image source={require('../assets/logo.gif')} style={styles.logo} />
           <Text style={styles.title}>Sign In</Text>
           <Text style={styles.welcomeText}>Welcome back to MacNa Chat</Text>
 
@@ -123,7 +123,7 @@ function SignInscreen() {
   );
 }
 
-registerRootComponent(SignInscreen);
+
 
 
 const styles = StyleSheet.create({

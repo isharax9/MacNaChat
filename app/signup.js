@@ -20,7 +20,7 @@ const ProfileImage = ({ uri }) => {
   );
 };
 
-export default function SignUpscreen() {
+export default function signup() {
 
   const [getImage, setImage] = useState();
 
@@ -32,9 +32,9 @@ export default function SignUpscreen() {
 
 
   const [loaded, error] = useFonts({
-    'SourceCodePro-Bold': require('./assets/fonts/static/SourceCodePro-Bold.ttf'),
-    'PressStart2P-Regular': require('./assets/fonts/PressStart2P-Regular.ttf'),
-    'SourceCodePro-VariableFont_wght': require('./assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
+    'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
+    'PressStart2P-Regular': require('../assets/fonts/PressStart2P-Regular.ttf'),
+    'SourceCodePro-VariableFont_wght': require('../assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
   });
 
   const [focusedInput, setFocusedInput] = useState();
@@ -53,7 +53,7 @@ export default function SignUpscreen() {
     <SafeAreaView style={styles.safeArea}>
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
         <View style={styles.container}>
-          <Image source={require('./assets/logo.gif')} style={styles.logo} />
+          <Image source={require('../assets/logo.gif')} style={styles.logo} />
           <Text style={styles.title}>Sign Up</Text>
           <Text style={styles.welcomeText}>Hello! Welcome to MacNa Chat </Text>
 
@@ -172,7 +172,7 @@ export default function SignUpscreen() {
     </SafeAreaView>
   );
 }
-registerRootComponent(SignUpscreen);
+
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
