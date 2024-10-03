@@ -1,4 +1,4 @@
-import { View, StyleSheet, Text, Image, ActivityIndicator } from "react-native";
+import { View, StyleSheet, Text, Image, ActivityIndicator, Pressable, Alert } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -68,7 +68,11 @@ export default function Home() {
                 <FlashList
                     data={getChatArray}
                     renderItem={({ item }) => (
-                        <View style={styles.chatRow}>
+                        <Pressable style={styles.chatRow} onPress={
+                            ()=>{
+                                Alert.alert("Chat with " + item.other_user_name +   " is not yet implemented")
+                            }
+                        }>
                             <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
                                 {item.avatar_image_found ? (
                                     <Image
@@ -90,9 +94,13 @@ export default function Home() {
 
                             <View style={styles.chatMeta}>
                                 <Text style={styles.time}>{item.dateTime}</Text>
-                                <FontAwesome6 name={"check"} color={item.chat_status_id === 1 ? "blue" : "grey"} size={16} />
+                                <FontAwesome6
+                                    name={item.chat_status_id != 1 ? "check" : "check-double"}
+                                    color={item.chat_status_id === 1 ? "blue" : "grey"}
+                                    size={16}
+                                />
                             </View>
-                        </View>
+                        </Pressable>
                     )}
                     estimatedItemSize={200}
                 />
