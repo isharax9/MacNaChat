@@ -22,6 +22,8 @@ function Home() {
                 if (json.success) {
                     console.log(json);
                 }
+            }else {
+                console.log("Error: " + response.status);
             }
         }
 

@@ -14,7 +14,7 @@ SplashScreen.preventAutoHideAsync();
 
 export default function index() {
 
-  console.log("index");
+  // console.log("index");
 
   const [getmobile, setMobile] = useState("");
   const [getpassword, setPassword] = useState("");
@@ -26,7 +26,7 @@ export default function index() {
   });
 
   useEffect(() => {
-    console.log("Checking user...");
+    // console.log("Checking user...");
     const checkUser = async () => {
       try {
         const user = await AsyncStorage.getItem('user');
@@ -45,14 +45,14 @@ export default function index() {
 
   useEffect(() => {
 
-    console.log("splash screen");
+    // console.log("splash screen");
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);
 
   if (!loaded && !error) {
-    console.log("last");
+    // console.log("last");
     return null;
   }
 
