@@ -47,8 +47,8 @@ export default function Home() {
     }, []);
 
     return (
-        <LinearGradient colors={["#ffd166", "#ef476f"]} style={styles.mainContainer}>
-            <StatusBar hidden={true} />
+        <LinearGradient colors={["white", "#ef476f"]} style={styles.mainContainer}>
+            <StatusBar hidden={false} />
 
             {getChatArray.length > 0 ? (
                 <FlashList
