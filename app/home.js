@@ -1,203 +1,175 @@
-// Removed unused import
-import React, { useEffect } from 'react';
-import { View, Text, FlatList, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from "expo-linear-gradient";
+import { View, StyleSheet, Text, Image } from "react-native";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
-import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FlashList } from "@shopify/flash-list";
+import { StatusBar } from "expo-status-bar";
 
-function Home() {
+SplashScreen.preventAutoHideAsync();
+
+export default function Home() {
+    const [getChatArray, setChatArray] = useState([]);
+    const [loaded, setLoaded] = useState(false); // State to track loading status
+    const [error, setError] = useState(false); // State to track error status
 
     useEffect(() => {
         async function fetchData() {
+            try {
+                let userJson = await AsyncStorage.getItem("user");
+                let user = JSON.parse(userJson);
 
-            let userJson = await AsyncStorage.getItem('user');
-            let user = JSON.parse(userJson);
-            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
+                console.log("Fetching chats for user ID:", user.id);
 
-            // Handle the response here
-            if (response.ok) {
-                let json = await response.json();
+                let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
 
-                if (json.success) {
-                    console.log(json);
+                if (response.ok) {
+                    let json = await response.json();
+                    if (json.success) {
+                        let chatArray = json.JsonChatArray;
+                        console.log("Chats fetched:", chatArray);
+                        setChatArray(chatArray);
+                    } else {
+                        console.log("API returned success: false");
+                    }
+                } else {
+                    console.log("Error fetching data:", response.status);
+                    setError(true); // Set error state if fetching fails
                 }
-            }else {
-                console.log("Error: " + response.status);
+            } catch (err) {
+                console.log("Error occurred:", err);
+                setError(true); // Set error state if an exception occurs
+            } finally {
+                setLoaded(true); // Mark loading as complete
+                SplashScreen.hideAsync(); // Hide splash screen once loading is complete
             }
         }
 
         fetchData();
     }, []);
 
-
-    // Sample data for chats with online status and message seen status
-    const chatData = [
-        { id: '1', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
-        { id: '2', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false, isSeen: false },
-        { id: '3', name: 'Charlie', lastMessage: 'Let’s meet up!kkkkkkkffgghhllii', time: 'Yesterday', isOnline: true, isSeen: true },
-        { id: '4', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: false, isSeen: false },
-        { id: '5', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: true, isSeen: true },
-        { id: '6', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: false, isSeen: false },
-        { id: '7', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
-        { id: '8', name: 'Bob', lastMessage: 'Are you coming?', time: '11:30 AM', isOnline: false, isSeen: false },
-        { id: '9', name: 'Charlie', lastMessage: 'Let’s meet up!', time: 'Yesterday', isOnline: true, isSeen: true },
-    ];
-
-    // Function to truncate long messages
-    const truncateMessage = (message, maxLength) => {
-        if (message.length > maxLength) {
-            return message.substring(0, maxLength) + '***';
-        }
-        return message;
-    };
-
-    // Render function for each chat item
-    const renderChatItem = ({ item }) => (
-
-        <View style={styles.chatItem}>
-            <View style={styles.avatarContainer}>
-                {/* Placeholder avatar */}
-                <View style={styles.chatAvatar} />
-
-                {/* Online/Offline status text */}
-                <Text style={[styles.statusText, { backgroundColor: item.isOnline ? 'green' : 'gray' }]}>
-                    {item.isOnline ? 'online' : 'offline'}
-                </Text>
-            </View>
-            <View style={styles.chatContent}>
-                <Text style={styles.chatName}>{item.name}</Text>
-                <Text style={styles.chatMessage} numberOfLines={1} ellipsizeMode="tail">
-                    {truncateMessage(item.lastMessage, 30)}
-                </Text>
-            </View>
-
-            <Text style={styles.chatTime}>{item.time}</Text>
-
-            {/* Render icon based on whether the message is seen or not */}
-            {item.isSeen ? (
-                <FontAwesome6 name="check-double" size={16} color="blue" /> // Seen: double check in blue
-            ) : (
-                <FontAwesome6 name="check" size={16} color="#888" /> // Not Seen: single check in gray
-            )}
-        </View>
-    );
+    if (!loaded) {
+        return null; // Show nothing while data is loading
+    }
 
     return (
-        <SafeAreaView style={styles.container}>
-            <StatusBar translucent={true} backgroundColor="black" />
-            {/* Top Section with logged-in user details */}
-            {/* <View style={styles.userInfo}>
-                <View style={styles.userAvatar} />
-                <View style={styles.userDetails}>
-                    <Text style={styles.userName}>Name</Text>
-                    <Text style={styles.userMobile}>Mobile</Text>
-                </View>
-                <Text style={styles.userSince}>Since .....</Text>
-            </View> */}
+        <LinearGradient colors={["#ffd166", "#ef476f"]} style={styles.mainContainer}>
+            <StatusBar hidden={true} />
 
-            {/* Chat List Section */}
-            <FlatList
-                data={chatData}
-                renderItem={renderChatItem}
-                keyExtractor={item => item.id}
-                contentContainerStyle={styles.chatList} />
-        </SafeAreaView>
+            {error ? (
+                <Text style={styles.errorText}>Error loading chats. Please try again later.</Text>
+            ) : getChatArray.length > 0 ? (
+                <FlashList
+                    data={getChatArray}
+                    renderItem={({ item }) => (
+                        <View style={styles.view5}>
+                            <View style={item.other_user_status === 1 ? styles.view6_2 : styles.view6}>
+                                {item.avatar_image_found ? (
+                                    <Image
+                                        source={{ uri: "https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }}
+                                        style={styles.image1}
+                                        resizeMode="contain"
+                                    />
+                                ) : (
+                                    <Text style={styles.text4}>{item.other_user_avatar_letters}</Text>
+                                )}
+                            </View>
+
+                            <View style={styles.view4}>
+                                <Text style={styles.text1}>{item.other_user_name}</Text>
+                                <Text style={styles.text4} numberOfLines={1}>
+                                    {item.message}
+                                </Text>
+
+                                <View style={styles.view7}>
+                                    <Text style={styles.text5}>{item.dateTime}</Text>
+                                    <FontAwesome6 name={"check"} color={item.chat_status_id === 1 ? "green" : "white"} size={20} />
+                                </View>
+                            </View>
+                        </View>
+                    )}
+                    estimatedItemSize={200}
+                />
+            ) : (
+                <Text style={styles.noChatsText}>No chats available</Text>
+            )}
+        </LinearGradient>
     );
 }
 
-
-
 const styles = StyleSheet.create({
-    container: {
+    mainContainer: {
         flex: 1,
-        backgroundColor: '#f0f0f0',
+        paddingVertical: 50,
+        paddingHorizontal: 25
     },
-    userInfo: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        padding: 15,
-        backgroundColor: '#fff',
-        marginBottom: 10,
-        marginTop: 0,
-        marginHorizontal: 7,
-        borderRadius: 8,
+    view4: {
+        flex: 1
     },
-    userAvatar: {
-        width: 60,
-        height: 60,
-        borderRadius: 30,
-        backgroundColor: 'blue', // Placeholder color for avatar
+    text1: {
+        fontSize: 22,
     },
-    userDetails: {
-        marginLeft: 10,
+    text4: {
+        fontSize: 18
     },
-    userName: {
-        fontSize: 18,
-        fontWeight: 'bold',
-    },
-    userMobile: {
+    text5: {
         fontSize: 14,
-        color: '#555',
+        alignSelf: "flex-end"
     },
-    userSince: {
-        marginLeft: 'auto',
-        fontSize: 12,
-        color: '#888',
+    view5: {
+        flexDirection: "row",
+        marginVertical: 10,
+        columnGap: 20
     },
-    chatList: {
-        paddingHorizontal: 15,
+    view6: {
+        width: 80,
+        height: 80,
+        backgroundColor: "white",
+        borderRadius: 40,
+        marginHorizontal: 10,
+        borderStyle: "dotted",
+        borderWidth: 4,
+        borderColor: "grey",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    chatItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        padding: 15,
-        borderRadius: 8,
-        marginBottom: 10,
-        columnGap: 10,
+    view6_2: {
+        width: 80,
+        height: 80,
+        backgroundColor: "white",
+        borderRadius: 40,
+        marginHorizontal: 10,
+        borderStyle: "dotted",
+        borderWidth: 4,
+        borderColor: "green",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    avatarContainer: {
-        position: 'relative',
+    view7: {
+        flexDirection: "row",
+        columnGap: 20,
+        alignSelf: "flex-end",
+    noChatsText: {
+        fontSize: 18,
+        textAlign: "center",
+        marginTop: 50,
+        color: "grey"
+    },
+    errorText: {
+        fontSize: 18,
+        textAlign: "center",
+        marginTop: 50,
+        color: "red"
+    },  marginTop: 50,
+        color: "grey"
+    },
+    image1: {
+        width: 70,
+        height: 70,
+        borderRadius: 35,
+        backgroundColor: 'white',
         justifyContent: 'center',
         alignItems: 'center',
-        
-    },
-    chatAvatar: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
-        backgroundColor: '#ccc', // Placeholder for avatar image
-    },
-    statusText: {
-        position: 'absolute',
-        bottom: -5,
-        left: 0,
-        color: 'white',
-        fontSize: 10,
-        paddingHorizontal: 5,
-        paddingVertical: 2,
-        borderRadius: 5,
-        overflow: 'hidden',
-        
-    },
-    chatContent: {
-        flex: 1,
-        marginLeft: 10,
-    },
-    chatName: {
-        fontSize: 16,
-        fontWeight: 'bold',
-    },
-    chatMessage: {
-        fontSize: 14,
-        color: '#555',
-        overflow: 'hidden',
-    },
-    chatTime: {
-        color: 'red', // Color for date/time
-        fontSize: 12,
-    },
+    }
 });
-
-export default Home;
