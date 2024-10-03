@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, } from "react-native";
+import { StyleSheet, View, Text, TextInput, Pressable, } from "react-native";
 import { Image } from 'expo-image';
 import { SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
@@ -54,20 +54,37 @@ export default function chat() {
                 </View>
             </View>
 
-            <View style={stylesheet.view5_1}>
-                <Text style={stylesheet.text3}>Message</Text>
-                <View style={stylesheet.view6}>
-                    <Text style={stylesheet.text4}>Time</Text>
-                    <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
+
+            <View style={stylesheet.center_view}>
+                <View style={stylesheet.view5_1}>
+                    <Text style={stylesheet.text3}>Message</Text>
+                    <View style={stylesheet.view6}>
+                        <Text style={stylesheet.text4}>Oct 03, 10.30 PM</Text>
+                        {
+                            true ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
+                                : null
+                        }
+                    </View>
+                </View>
+
+                <View style={stylesheet.view5_2}>
+                    <Text style={stylesheet.text3}>Message</Text>
+                    <View style={stylesheet.view6}>
+                        <Text style={stylesheet.text4}>Oct 03, 12.30 PM</Text>
+                        {
+                            false ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
+                                : null
+                        }
+                    </View>
                 </View>
             </View>
+            
 
-            <View style={stylesheet.view5_2}>
-                <Text style={stylesheet.text3}>Message</Text>
-                <View style={stylesheet.view6}>
-                    <Text style={stylesheet.text4}>Time</Text>
-                    <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
-                </View>
+            <View style={stylesheet.view7}>
+                <TextInput style={stylesheet.input1} />
+                <Pressable style={stylesheet.pressable1}>
+                    <FontAwesome6 name="paper-plane" color="white" size={20} />
+                </Pressable>
             </View>
 
         </LinearGradient>
@@ -138,9 +155,8 @@ const stylesheet = StyleSheet.create({
         marginVertical: 5,
         padding: 10,
         justifyContent: "center",
-        alignItems: "flex-end",
         rowGap: 5,
-        width: "auto",
+        alignSelf: "flex-end",
     },
     view5_2: {
         backgroundColor: "white",
@@ -149,13 +165,45 @@ const stylesheet = StyleSheet.create({
         marginVertical: 5,
         padding: 10,
         justifyContent: "center",
-        alignItems: "flex-start",
         rowGap: 5,
-        width: "auto",
+        alignSelf: "flex-start",
+        
     },
     view6: {
         flexDirection: "row",
         columnGap: 10,
+    },
+    view7: {
+        justifyContent: "center",
+        alignItems: "center",
+        flexDirection: "row",
+        columnGap: 10,
+        paddingHorizontal: 10,
+        marginVertical: 20,
+    },
+    input1: {
+        
+        height: 45,
+        borderColor: "black",
+        borderWidth: 1,
+        borderRadius: 10,
+        fontFamily: 'SourceCodePro-Bold',
+        paddingHorizontal: 10,
+        flex: 1,
+        paddingStart: 10,
+    },
+    pressable1: {
+        width: 50,
+        height: 50,
+        backgroundColor: "black",
+        borderRadius: 10,
+        padding: 10,
+        justifyContent: "center",
+        alignItems: "center",
+    },
+    center_view: {
+        flex: 1,
+        marginVertical: 20,
     },
 
 });
