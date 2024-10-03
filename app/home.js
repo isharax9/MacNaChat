@@ -6,6 +6,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
 import { useFonts } from 'expo-font';
+import { router } from "expo-router";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -70,7 +71,8 @@ export default function Home() {
                     renderItem={({ item }) => (
                         <Pressable style={styles.chatRow} onPress={
                             ()=>{
-                                Alert.alert("Chat with " + item.other_user_name +   " is not yet implemented")
+                                Alert.alert("View Chat","Chat with " + item.other_user_name +   " is not yet implemented")
+                                router.push("/chat");
                             }
                         }>
                             <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
