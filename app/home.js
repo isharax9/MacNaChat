@@ -1,11 +1,34 @@
-import { registerRootComponent } from 'expo';
-import React from 'react';
+// Removed unused import
+import React, { useEffect } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { FontAwesome6 } from "@expo/vector-icons";
 import { StatusBar } from 'expo-status-bar';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function Home() {
+
+    useEffect(() => {
+        async function fetchData() {
+
+            let userJson = await AsyncStorage.getItem('user');
+            let user = JSON.parse(userJson);
+            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
+
+            // Handle the response here
+            if (response.ok) {
+                let json = await response.json();
+
+                if (json.success) {
+                    console.log(json);
+                }
+            }
+        }
+
+        fetchData();
+    }, []);
+
+
     // Sample data for chats with online status and message seen status
     const chatData = [
         { id: '1', name: 'Alice', lastMessage: 'Hey, how are you?', time: '12:45 PM', isOnline: true, isSeen: true },
@@ -62,14 +85,14 @@ function Home() {
         <SafeAreaView style={styles.container}>
             <StatusBar translucent={true} backgroundColor="black" />
             {/* Top Section with logged-in user details */}
-            <View style={styles.userInfo}>
+            {/* <View style={styles.userInfo}>
                 <View style={styles.userAvatar} />
                 <View style={styles.userDetails}>
                     <Text style={styles.userName}>Name</Text>
                     <Text style={styles.userMobile}>Mobile</Text>
                 </View>
                 <Text style={styles.userSince}>Since .....</Text>
-            </View>
+            </View> */}
 
             {/* Chat List Section */}
             <FlatList
