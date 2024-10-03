@@ -1,4 +1,3 @@
-import { LinearGradient } from "expo-linear-gradient";
 import { View, StyleSheet, Text, Image } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
@@ -47,36 +46,36 @@ export default function Home() {
     }, []);
 
     return (
-        <LinearGradient colors={["white", "#ef476f"]} style={styles.mainContainer}>
+        <View style={styles.mainContainer}>
             <StatusBar hidden={false} />
 
             {getChatArray.length > 0 ? (
                 <FlashList
                     data={getChatArray}
                     renderItem={({ item }) => (
-                        <View style={styles.view5}>
-                            <View style={item.other_user_status === 1 ? styles.view6_2 : styles.view6}>
+                        <View style={styles.chatRow}>
+                            <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
                                 {item.avatar_image_found ? (
                                     <Image
                                         source={{ uri: "https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }}
-                                        style={styles.image1}
-                                        resizeMode="contain"
+                                        style={styles.avatarImage}
+                                        resizeMode="cover"
                                     />
                                 ) : (
-                                    <Text style={styles.text4}>{item.other_user_avatar_letters}</Text>
+                                    <Text style={styles.avatarLetters}>{item.other_user_avatar_letters}</Text>
                                 )}
                             </View>
 
-                            <View style={styles.view4}>
-                                <Text style={styles.text1}>{item.other_user_name}</Text>
-                                <Text style={styles.text4} numberOfLines={1}>
+                            <View style={styles.chatInfo}>
+                                <Text style={styles.userName}>{item.other_user_name}</Text>
+                                <Text style={styles.messagePreview} numberOfLines={1}>
                                     {item.message}
                                 </Text>
+                            </View>
 
-                                <View style={styles.view7}>
-                                    <Text style={styles.text5}>{item.dateTime}</Text>
-                                    <FontAwesome6 name={"check"} color={item.chat_status_id === 1 ? "green" : "white"} size={20} />
-                                </View>
+                            <View style={styles.chatMeta}>
+                                <Text style={styles.time}>{item.dateTime}</Text>
+                                <FontAwesome6 name={"check"} color={item.chat_status_id === 1 ? "blue" : "grey"} size={16} />
                             </View>
                         </View>
                     )}
@@ -85,76 +84,79 @@ export default function Home() {
             ) : (
                 <Text style={styles.noChatsText}>No chats available</Text>
             )}
-        </LinearGradient>
+        </View>
     );
 }
 
 const styles = StyleSheet.create({
     mainContainer: {
         flex: 1,
-        paddingVertical: 50,
-        paddingHorizontal: 25,
+        paddingTop: 20,
+        paddingHorizontal: 10,
+        backgroundColor: "#f9f9f9",
     },
-    view4: {
-        flex: 1,
-    },
-    text1: {
-        fontSize: 22,
-    },
-    text4: {
-        fontSize: 18,
-    },
-    text5: {
-        fontSize: 14,
-        alignSelf: "flex-end",
-    },
-    view5: {
+    chatRow: {
         flexDirection: "row",
-        marginVertical: 10,
-        columnGap: 20,
-    },
-    view6: {
-        width: 80,
-        height: 80,
-        backgroundColor: "white",
-        borderRadius: 40,
-        marginHorizontal: 10,
-        borderStyle: "dotted",
-        borderWidth: 4,
-        borderColor: "grey",
-        justifyContent: "center",
         alignItems: "center",
-    },
-    view6_2: {
-        width: 80,
-        height: 80,
         backgroundColor: "white",
-        borderRadius: 40,
-        marginHorizontal: 10,
-        borderStyle: "dotted",
-        borderWidth: 4,
+        padding: 15,
+        borderBottomWidth: 1,
+        borderColor: "#eee",
+    },
+    onlineStatus: {
+        width: 50,
+        height: 50,
+        backgroundColor: "white",
+        borderRadius: 25,
+        borderWidth: 2,
         borderColor: "green",
         justifyContent: "center",
         alignItems: "center",
     },
-    view7: {
-        flexDirection: "row",
-        columnGap: 20,
-        alignSelf: "flex-end",
+    offlineStatus: {
+        width: 50,
+        height: 50,
+        backgroundColor: "white",
+        borderRadius: 25,
+        borderWidth: 2,
+        borderColor: "grey",
+        justifyContent: "center",
         alignItems: "center",
     },
-    noChatsText: {
+    avatarImage: {
+        width: 46,
+        height: 46,
+        borderRadius: 23,
+    },
+    avatarLetters: {
         fontSize: 18,
+        color: "#333",
+    },
+    chatInfo: {
+        flex: 1,
+        paddingLeft: 10,
+    },
+    userName: {
+        fontSize: 16,
+        fontWeight: "bold",
+        color: "#000",
+    },
+    messagePreview: {
+        fontSize: 14,
+        color: "#555",
+    },
+    chatMeta: {
+        alignItems: "flex-end",
+    },
+    time: {
+        fontSize: 12,
+        color: "#999",
+        marginBottom: 5,
+    },
+    noChatsText: {
+        fontSize: 16,
         textAlign: "center",
         marginTop: 50,
         color: "grey",
-    },
-    image1: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
-        backgroundColor: 'white',
-        justifyContent: 'center',
-        alignItems: 'center',
     },
 });
