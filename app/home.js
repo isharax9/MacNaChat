@@ -1,14 +1,21 @@
-import { View, StyleSheet, Text, Image } from "react-native";
+import { View, StyleSheet, Text, Image, ActivityIndicator } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
+import { useFonts } from 'expo-font';
 
 SplashScreen.preventAutoHideAsync();
 
 export default function Home() {
+    const [fontsLoaded] = useFonts({
+        'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
+        'PressStart2P-Regular': require('../assets/fonts/PressStart2P-Regular.ttf'),
+        'SourceCodePro-VariableFont_wght': require('../assets/fonts/SourceCodePro-VariableFont_wght.ttf'),
+    });
+
     const [getChatArray, setChatArray] = useState([]);
 
     useEffect(() => {
@@ -42,13 +49,21 @@ export default function Home() {
     }, []);
 
     useEffect(() => {
-        SplashScreen.hideAsync();
-    }, []);
+        if (fontsLoaded) {
+            SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
+
+    if (!fontsLoaded) {
+        return <ActivityIndicator size="large" color="#0000ff" />;
+    }
 
     return (
         <View style={styles.mainContainer}>
             <StatusBar hidden={false} />
-
+            <View style={styles.header}>
+                <Text style={styles.title}>MacNa Chat</Text>
+            </View>
             {getChatArray.length > 0 ? (
                 <FlashList
                     data={getChatArray}
@@ -94,6 +109,15 @@ const styles = StyleSheet.create({
         paddingTop: 20,
         paddingHorizontal: 10,
         backgroundColor: "#f9f9f9",
+    },
+    header: {
+        paddingVertical: 10,
+    },
+    title: {
+        fontSize: 24,
+        
+        color: "#000",
+        fontFamily: 'PressStart2P-Regular',
     },
     chatRow: {
         flexDirection: "row",
