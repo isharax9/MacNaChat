@@ -40,7 +40,8 @@ export default function chat() {
 
 
     //fetch chat array from server
-    useEffect(() => {
+    useEffect(
+        () => {
         async function fetchChatArray() {
 
             let userJson = await AsyncStorage.getItem("user");
@@ -51,13 +52,19 @@ export default function chat() {
             if (response.ok) {
                 let chatArray = await response.json();
                 //console.log(chatArray);
-                console.log("Chats fetched Successfully From Backend");
+                // console.log("Chats fetched Successfully From Backend");
                 setChatArray(chatArray);
 
             }
         }
 
+
         fetchChatArray();
+        //fetch chat array every 5 seconds
+        setInterval(() => {
+            fetchChatArray();
+        }, 1000);
+
     }, []);
 
 
