@@ -8,6 +8,7 @@ import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 import { FlashList } from "@shopify/flash-list";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -40,7 +41,12 @@ export default function chat() {
     //fetch chat array from server
     useEffect(() => {
         async function fetchChatArray() {
-            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=1&other_user_id=" + item.other_user_id);
+
+            let userJson = await AsyncStorage.getItem("user");
+            let user = JSON.parse(userJson);
+            console.log("Fetching chats for user ID:", user.id);
+
+            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id="+user.id+"&other_user_id=" + item.other_user_id);
             if (response.ok) {
                 let chatArray = await response.json();
                 console.log(chatArray);
