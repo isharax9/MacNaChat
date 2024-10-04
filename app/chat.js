@@ -40,7 +40,7 @@ export default function chat() {
     //fetch chat array from server
     useEffect(() => {
         async function fetchChatArray() {
-            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=1&other_user_id=2");
+            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=1&other_user_id=" + item.other_user_id);
             if (response.ok) {
                 let chatArray = await response.json();
                 console.log(chatArray);
