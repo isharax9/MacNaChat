@@ -22,6 +22,7 @@ export default function chat() {
 
     //store chat array
     const [getChatArray, setChatArray] = useState([]);
+    const [getChatText, setChatText] = useState("");
 
     const [loaded, error] = useFonts({
         'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
@@ -46,7 +47,7 @@ export default function chat() {
             let user = JSON.parse(userJson);
             //console.log("Fetching chats for user ID:", user.id);
 
-            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id="+user.id+"&other_user_id=" + item.other_user_id);
+            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=" + user.id + "&other_user_id=" + item.other_user_id);
             if (response.ok) {
                 let chatArray = await response.json();
                 //console.log(chatArray);
@@ -75,16 +76,16 @@ export default function chat() {
 
                     {
                         item.avatar_image_found == "true"
-                         ? <Image style={stylesheet.image1}
-                            source={"https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/"+item.other_user_mobile+".png"}
-                            contentFit={"contain"} />
+                            ? <Image style={stylesheet.image1}
+                                source={"https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png"}
+                                contentFit={"contain"} />
                             : <Text style={stylesheet.text1}>{item.other_user_avatar_letters}</Text>
                     }
 
                 </View>
                 <View style={stylesheet.view4}>
                     <Text style={stylesheet.text2}>{item.other_user_name}</Text>
-                    <Text style={stylesheet.text3_1}>{item.other_user_status==1?"Online":"Offline"}</Text>
+                    <Text style={stylesheet.text3_1}>{item.other_user_status == 1 ? "Online" : "Offline"}</Text>
                 </View>
             </View>
 
@@ -113,8 +114,19 @@ export default function chat() {
 
 
             <View style={stylesheet.view7}>
-                <TextInput style={stylesheet.input1} />
-                <Pressable style={stylesheet.pressable1}>
+                <TextInput style={stylesheet.input1} onChangeText={
+                    (text) => {
+                        setChatText(text);
+                    }
+                } />
+                <Pressable style={stylesheet.pressable1} onPress={
+                    () => {
+                        console.log(getChatText);
+                    }
+                }
+
+                >
+
                     <FontAwesome6 name="paper-plane" color="white" size={20} />
                 </Pressable>
             </View>
