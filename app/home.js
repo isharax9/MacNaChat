@@ -25,7 +25,7 @@ export default function Home() {
                 const userJson = await AsyncStorage.getItem("user");
                 const user = JSON.parse(userJson);
 
-                console.log("Fetching chats for user ID:", user.id);
+                //console.log("Fetching chats for user ID:", user.id);
 
                 const response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
 
@@ -33,7 +33,7 @@ export default function Home() {
                     const json = await response.json();
                     if (json.success) {
                         const chatArray = json.jsonChatArray; // Ensure this matches your backend response
-                        console.log("Chats fetched:", chatArray);
+                        //console.log("Chats fetched:", chatArray);
                         console.log("Chat Home fetched Successfully From Backend");
                         setChatArray(chatArray);
                     } else {

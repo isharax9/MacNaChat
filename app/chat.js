@@ -16,8 +16,8 @@ export default function chat() {
 
     //get parameters from url
     const item = useLocalSearchParams();
-    console.log(item.other_user_id);
-    console.log(item);
+    //console.log(item.other_user_id);
+    //console.log(item);
 
 
     //store chat array
@@ -44,12 +44,12 @@ export default function chat() {
 
             let userJson = await AsyncStorage.getItem("user");
             let user = JSON.parse(userJson);
-            console.log("Fetching chats for user ID:", user.id);
+            //console.log("Fetching chats for user ID:", user.id);
 
             let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id="+user.id+"&other_user_id=" + item.other_user_id);
             if (response.ok) {
                 let chatArray = await response.json();
-                console.log(chatArray);
+                //console.log(chatArray);
                 console.log("Chats fetched Successfully From Backend");
                 setChatArray(chatArray);
 
