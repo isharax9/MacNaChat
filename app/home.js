@@ -72,8 +72,8 @@ export default function Home() {
                     renderItem={({ item }) => (
                         <Pressable style={styles.chatRow} onPress={
                             ()=>{
-                                Alert.alert("View Chat","Chat with " + item.other_user_name +   " is not yet implemented")
-                                router.push("/chat");
+                                //Alert.alert("View Chat","Chat with " + item.other_user_name +   " is not yet implemented");
+                                router.push("/chat?other_user_id=" + item.other_user_id);
                             }
                         }>
                             <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
