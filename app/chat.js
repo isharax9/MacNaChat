@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, TextInput, Pressable, Alert, } from "react-native";
+import { StyleSheet, View, Text, TextInput, Pressable, Alert } from "react-native";
 import { Image } from 'expo-image';
 import { SplashScreen, useLocalSearchParams } from "expo-router";
 import { useFonts } from "expo-font";
@@ -12,16 +12,14 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 SplashScreen.preventAutoHideAsync();
 
 export default function ChatScreen() {
-    // Get parameters from URL
     const item = useLocalSearchParams();
-
-    // Store chat array
     const [getChatArray, setChatArray] = useState([]);
     const [getChatText, setChatText] = useState("");
     const [loaded, error] = useFonts({
         'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
         'PressStart2P-Regular': require('../assets/fonts/PressStart2P-Regular.ttf'),
         'SourceCodePro-Light': require('../assets/fonts/static/SourceCodePro-Light.ttf'),
+        'SourceCodePro-Regular': require('../assets/fonts/static/SourceCodePro-Regular.ttf'),
     });
 
     useEffect(() => {
@@ -30,15 +28,12 @@ export default function ChatScreen() {
         }
     }, [loaded, error]);
 
-    // Fetch chat array from server
     useEffect(() => {
-        // Define function to fetch chat data
         async function fetchChatArray() {
             try {
                 let userJson = await AsyncStorage.getItem("user");
                 let user = JSON.parse(userJson);
 
-                // Check if item.other_user_id is valid
                 if (!item.other_user_id) {
                     console.log("No valid other_user_id provided.");
                     return;
@@ -58,12 +53,10 @@ export default function ChatScreen() {
 
         fetchChatArray();
 
-        // Set interval to fetch chat data every 5 seconds
         const interval = setInterval(() => {
             fetchChatArray();
-        }, 5000);
+        }, 1000);
 
-        // Clean up interval on unmount
         return () => clearInterval(interval);
     }, [item.other_user_id]);
 
@@ -72,7 +65,7 @@ export default function ChatScreen() {
     }
 
     return (
-        <LinearGradient colors={["#83a4d4", "#b6fbff"]} style={stylesheet.view1}>
+        <LinearGradient colors={["#f0f0f0", "#e0e0e0"]} style={stylesheet.view1}>
             <StatusBar hidden={false} />
 
             <View style={stylesheet.view2}>
@@ -98,7 +91,11 @@ export default function ChatScreen() {
                             <View style={stylesheet.view6}>
                                 <Text style={stylesheet.text4}>{item.datetime}</Text>
                                 {item.side == "right" && (
-                                    <FontAwesome6 name="check" color={item.status != 1 ? "green" : "blue"} size={18} />
+                                    <FontAwesome6
+                                        name={item.chat_status_id === 1 ? "check" : "check-double"}
+                                        color={item.chat_status_id === 1 ? "grey" : "blue"}
+                                        size={16}
+                                    />
                                 )}
                             </View>
                         </View>
@@ -112,6 +109,8 @@ export default function ChatScreen() {
                     style={stylesheet.input1}
                     value={getChatText}
                     onChangeText={setChatText}
+                    placeholder="Type a message..."
+                    placeholderTextColor="#888"
                 />
                 <Pressable
                     style={stylesheet.pressable1}
@@ -148,91 +147,116 @@ export default function ChatScreen() {
 const stylesheet = StyleSheet.create({
     view1: { flex: 1 },
     view2: {
+        backgroundColor: "white",
         marginTop: 20,
         paddingHorizontal: 20,
         flexDirection: "row",
-        columnGap: 10,
-        justifyContent: "flex-start",
         alignItems: "center",
+        justifyContent: "flex-start",
+        borderBottomWidth: 1,
+        borderBottomColor: "#ccc"
     },
     view3: {
         backgroundColor: "white",
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         justifyContent: "center",
         alignItems: "center",
-        borderStyle: "solid",
-        borderColor: "red",
-        borderWidth: 2,
+        borderWidth: 1,
+        borderColor: "#ccc",
     },
     image1: {
-        width: 70,
-        height: 70,
-        borderRadius: 35,
+        width: 50,
+        height: 50,
+        borderRadius: 25,
     },
     text1: {
         fontFamily: 'SourceCodePro-Bold',
-        fontSize: 50,
-        color: "black",
+        fontSize: 24,
+        color: "#333",
     },
-    view4: { rowGap: 5 },
+    view4: { marginLeft: 10,
+        
+     },
     text2: {
         fontFamily: 'SourceCodePro-Bold',
-        fontSize: 20,
-        color: "black",
+        fontSize: 18,
+        color: "#333",
+    },
+    text3: {
+        fontFamily: 'SourceCodePro-Regular',
+        fontSize: 16,
+        color: "#333",
     },
     text3_1: {
-        fontFamily: 'SourceCodePro-Bold',
-        fontSize: 16,
+        fontFamily: 'SourceCodePro-Regular',
+        fontSize: 14,
         color: "green",
+    },
+    text4: {
+        fontFamily: 'SourceCodePro-Light',
+        fontSize: 12,
+        color: "#999",
     },
     center_view: {
         flex: 1,
-        marginVertical: 20,
+        marginVertical: 10,
     },
     view5_1: {
-        backgroundColor: "white",
+        backgroundColor: "#e6f7ff",
         borderRadius: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         marginVertical: 5,
         padding: 10,
         alignSelf: "flex-end",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
     },
     view5_2: {
-        backgroundColor: "white",
+        backgroundColor: "#fff",
         borderRadius: 10,
-        marginHorizontal: 20,
+        marginHorizontal: 10,
         marginVertical: 5,
         padding: 10,
         alignSelf: "flex-start",
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 2,
     },
     view6: {
         flexDirection: "row",
-        columnGap: 10,
+        alignItems: "center",
+        marginTop: 5,
+        columnGap: 5,
     },
     view7: {
-        justifyContent: "center",
-        alignItems: "center",
         flexDirection: "row",
-        columnGap: 10,
+        alignItems: "center",
         paddingHorizontal: 10,
-        marginVertical: 20,
+        paddingVertical: 10,
+        borderTopWidth: 1,
+        borderTopColor: "#ccc",
     },
     input1: {
-        height: 45,
-        borderColor: "black",
-        borderWidth: 1,
-        borderRadius: 10,
-        fontFamily: 'SourceCodePro-Bold',
-        paddingHorizontal: 10,
         flex: 1,
+        height: 40,
+        borderColor: "#ccc",
+        borderWidth: 1,
+        borderRadius: 20,
+        paddingHorizontal: 15,
+        fontFamily: 'SourceCodePro-Regular',
+        backgroundColor: "#fff",
     },
     pressable1: {
-        width: 50,
-        height: 50,
-        backgroundColor: "black",
-        borderRadius: 10,
+        marginLeft: 10,
+        width: 40,
+        height: 40,
+        backgroundColor: "#007bff",
+        borderRadius: 20,
         justifyContent: "center",
         alignItems: "center",
     },
