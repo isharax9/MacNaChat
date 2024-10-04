@@ -14,8 +14,9 @@ SplashScreen.preventAutoHideAsync();
 export default function chat() {
 
     //get parameters from url
-    const parameters = useLocalSearchParams();
-    console.log(parameters.other_user_id);
+    const item = useLocalSearchParams();
+    console.log(item.other_user_id);
+    console.log(item);
 
 
     //store chat array
