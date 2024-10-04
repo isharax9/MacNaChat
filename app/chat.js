@@ -102,7 +102,7 @@ export default function chat() {
                                     <Text style={stylesheet.text4}>{item.datetime}</Text>
                                     {
                                         item.side == "right" ?
-                                            <FontAwesome6 name="check" color={item.status == 1 ? "green" : "blue"} size={18} /> //green for delivered or unseen, blue for seen
+                                            <FontAwesome6 name="check" color={item.status != 1 ? "green" : "blue"} size={18} /> //green for delivered or unseen, blue for seen
                                             : null
                                     }
                                 </View>
