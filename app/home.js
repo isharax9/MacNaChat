@@ -1,6 +1,6 @@
-import { View, StyleSheet, Text, Image, ActivityIndicator, Pressable, Alert } from "react-native";
+import { View, StyleSheet, Text, Image, ActivityIndicator, Pressable, Alert, RefreshControl } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback, useRef } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
@@ -18,43 +18,96 @@ export default function Home() {
     });
 
     const [getChatArray, setChatArray] = useState([]);
+    const [refreshing, setRefreshing] = useState(false);
+    const isMounted = useRef(true); // Use a ref to track component mount status
+
+    const fetchData = useCallback(async () => {
+        try {
+            const userJson = await AsyncStorage.getItem("user");
+            if (!userJson) {
+                console.log("User data not found in AsyncStorage");
+                if (isMounted.current) router.replace("/");
+                return;
+            }
+
+            const user = JSON.parse(userJson);
+            if (!user || !user.id) {
+                console.log("Invalid user data:", user);
+                if (isMounted.current) router.replace("/");
+                return;
+            }
+
+            const response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
+            if (response.ok) {
+                const json = await response.json();
+                if (json.success && isMounted.current) {
+                    console.log("Chat Home fetched successfully.");
+                    setChatArray(json.jsonChatArray);
+                } else {
+                    console.log("API returned success: false");
+                }
+            } else {
+                console.log("Error fetching data:", response.status);
+            }
+        } catch (err) {
+            console.log("Error occurred:", err);
+        }
+    }, []);
 
     useEffect(() => {
-        async function fetchData() {
-            try {
-                const userJson = await AsyncStorage.getItem("user");
-                const user = JSON.parse(userJson);
-
-                //console.log("Fetching chats for user ID:", user.id);
-
-                const response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
-
-                if (response.ok) {
-                    const json = await response.json();
-                    if (json.success) {
-                        const chatArray = json.jsonChatArray; // Ensure this matches your backend response
-                        //console.log("Chats fetched:", chatArray);
-                        console.log("Chat Home fetched Successfully From Backend");
-                        setChatArray(chatArray);
-                    } else {
-                        console.log("API returned success: false");
-                    }
-                } else {
-                    console.log("Error fetching data:", response.status);
-                }
-            } catch (err) {
-                console.log("Error occurred:", err);
-            }
-        }
-
+        isMounted.current = true;
         fetchData();
-    }, []);
+
+        return () => {
+            isMounted.current = false; // Cleanup on unmount
+        };
+    }, [fetchData]);
 
     useEffect(() => {
         if (fontsLoaded) {
             SplashScreen.hideAsync();
         }
     }, [fontsLoaded]);
+
+    const onRefresh = useCallback(() => {
+        setRefreshing(true);
+        fetchData().then(() => setRefreshing(false));
+    }, [fetchData]);
+
+    const handleSignOut = async () => {
+        try {
+            Alert.alert(
+                "Sign Out",
+                "Are you sure you want to sign out?",
+                [
+                    {
+                        text: "Cancel",
+                        style: "cancel",
+                    },
+                    {
+                        text: "Sign Out",
+                        onPress: async () => {
+                            try {
+                                const userJson = await AsyncStorage.getItem("user");
+                                if (!userJson) {
+                                    console.log("No user data found to sign out.");
+                                    return;
+                                }
+                                await AsyncStorage.removeItem("user");
+                                if (isMounted.current) router.replace("/"); // Only navigate if component is mounted
+                            } catch (err) {
+                                console.log("Error during sign out:", err);
+                                Alert.alert("Sign Out Error", "An error occurred during sign out. Please try again.");
+                            }
+                        },
+                    },
+                ],
+                { cancelable: true }
+            );
+        } catch (err) {
+            console.log("Error signing out:", err);
+        }
+    };
 
     if (!fontsLoaded) {
         return <ActivityIndicator size="large" color="#0000ff" />;
@@ -64,22 +117,20 @@ export default function Home() {
         <View style={styles.mainContainer}>
             <StatusBar hidden={false} />
             <View style={styles.header}>
-                <Text style={styles.title}>MacNa Chat</Text>
+                <Pressable onPress={handleSignOut}>
+                    <Text style={styles.title}>MacNa Chat</Text>
+                </Pressable>
             </View>
             {getChatArray.length > 0 ? (
                 <FlashList
                     data={getChatArray}
                     renderItem={({ item }) => (
-                        <Pressable style={styles.chatRow} onPress={
-                            ()=>{
-                                //Alert.alert("View Chat","Chat with " + item.other_user_name +   " is not yet implemented");
-                                //router.push("/chat?other_user_id=" + item.other_user_id);
-                                router.push({
-                                    pathname: "/chat",
-                                    params: item
-                                });
-                            }
-                        }>
+                        <Pressable style={styles.chatRow} onPress={() => {
+                            router.push({
+                                pathname: "/chat",
+                                params: item
+                            });
+                        }}>
                             <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
                                 {item.avatar_image_found ? (
                                     <Image
@@ -110,6 +161,9 @@ export default function Home() {
                         </Pressable>
                     )}
                     estimatedItemSize={200}
+                    refreshControl={
+                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+                    }
                 />
             ) : (
                 <Text style={styles.noChatsText}>No chats available</Text>
@@ -130,7 +184,6 @@ const styles = StyleSheet.create({
     },
     title: {
         fontSize: 24,
-        
         color: "#000",
         fontFamily: 'PressStart2P-Regular',
     },
