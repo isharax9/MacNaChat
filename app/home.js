@@ -34,6 +34,7 @@ export default function Home() {
                     if (json.success) {
                         const chatArray = json.jsonChatArray; // Ensure this matches your backend response
                         console.log("Chats fetched:", chatArray);
+                        console.log("Chat Home fetched Successfully From Backend");
                         setChatArray(chatArray);
                     } else {
                         console.log("API returned success: false");

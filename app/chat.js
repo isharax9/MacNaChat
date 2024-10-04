@@ -4,14 +4,16 @@ import { StyleSheet, View, Text, TextInput, Pressable, } from "react-native";
 import { Image } from 'expo-image';
 import { SplashScreen } from "expo-router";
 import { useFonts } from "expo-font";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 SplashScreen.preventAutoHideAsync();
 
 export default function chat() {
 
-
+    //store chat array
+    const [getChatArray, setChatArray] = useState([]);
 
     const [loaded, error] = useFonts({
         'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
@@ -26,6 +28,24 @@ export default function chat() {
             SplashScreen.hideAsync();
         }
     }, [loaded, error]);
+
+
+    //fetch chat array from server
+    useEffect(() => {
+        async function fetchChatArray() {
+            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=1&other_user_id=2");
+            if (response.ok) {
+                let chatArray = await response.json();
+                console.log(chatArray);
+                console.log("Chats fetched Successfully From Backend");
+                setChatArray(chatArray);
+                
+            }
+        }
+
+        fetchChatArray();
+    }, []);
+
 
     if (!loaded && !error) {
         // console.log("last");
