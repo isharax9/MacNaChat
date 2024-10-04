@@ -92,9 +92,9 @@ export default function ChatScreen() {
                                 <Text style={stylesheet.text4}>{item.datetime}</Text>
                                 {item.side == "right" && (
                                     <FontAwesome6
-                                        name={item.chat_status_id === 1 ? "check" : "check-double"}
-                                        color={item.chat_status_id === 1 ? "grey" : "blue"}
-                                        size={16}
+                                        name={item.status != 1 ? "check" : "check-double"}
+                                        color={item.status != 1 ? "green" : "blue"}
+                                        size={18}
                                     />
                                 )}
                             </View>
