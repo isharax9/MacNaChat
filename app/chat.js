@@ -1,6 +1,6 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, Text, TextInput, Pressable, } from "react-native";
+import { StyleSheet, View, Text, TextInput, Pressable, Alert, } from "react-native";
 import { Image } from 'expo-image';
 import { SplashScreen, useLocalSearchParams } from "expo-router";
 import { useFonts } from "expo-font";
@@ -114,14 +114,32 @@ export default function chat() {
 
 
             <View style={stylesheet.view7}>
-                <TextInput style={stylesheet.input1} onChangeText={
+                <TextInput style={stylesheet.input1} value={getChatText} onChangeText={
                     (text) => {
                         setChatText(text);
                     }
                 } />
                 <Pressable style={stylesheet.pressable1} onPress={
-                    () => {
-                        console.log(getChatText);
+                    async () => {
+                        
+                        if (getChatText.length == 0) {
+                            console.log("Empty Message");
+                            Alert.alert("Error","Please enter a message");
+                            
+                        } else {
+                            console.log(getChatText);
+                            let userJson = await AsyncStorage.getItem("user");
+                            let user = JSON.parse(userJson);
+                            let response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/SendChat?logged_user_id="+user.id+"&other_user_id="+item.other_user_id+ "&message=" + getChatText);
+                            if (response.ok) {
+                                let json = await response.json();
+
+                                if (json.success) {
+                                    console.log("Message Sent");
+                                    setChatText("");
+                                }
+                            }
+                        }
                     }
                 }
 
