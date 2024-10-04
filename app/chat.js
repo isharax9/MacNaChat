@@ -2,7 +2,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { StatusBar } from "expo-status-bar";
 import { StyleSheet, View, Text, TextInput, Pressable, } from "react-native";
 import { Image } from 'expo-image';
-import { SplashScreen } from "expo-router";
+import { SplashScreen, useLocalSearchParams } from "expo-router";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
@@ -12,6 +12,11 @@ import { FlashList } from "@shopify/flash-list";
 SplashScreen.preventAutoHideAsync();
 
 export default function chat() {
+
+    //get parameters from url
+    const parameters = useLocalSearchParams();
+    console.log(parameters.other_user_id);
+
 
     //store chat array
     const [getChatArray, setChatArray] = useState([]);
