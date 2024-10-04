@@ -40,7 +40,7 @@ export default function chat() {
                 console.log(chatArray);
                 console.log("Chats fetched Successfully From Backend");
                 setChatArray(chatArray);
-                
+
             }
         }
 
@@ -77,38 +77,27 @@ export default function chat() {
 
 
             <View style={stylesheet.center_view}>
+                <FlashList
+                    data={getChatArray}
+                    renderItem={
 
-                    <FlashList
-                        data={getChatArray}
-                        renderItem={
-
-                            ({item})=>
-                                <View style={stylesheet.view5_1}>
-                                    <Text style={stylesheet.text3}>Message</Text>
-                                    <View style={stylesheet.view6}>
-                                        <Text style={stylesheet.text4}>Oct 03, 10.30 PM</Text>
-                                        {
-                                            true ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
-                                                : null
-                                        }
-                                    </View>
+                        ({ item }) =>
+                            <View style={item.side == "right" ? stylesheet.view5_1 : stylesheet.view5_2}>
+                                <Text style={stylesheet.text3}>{item.message}</Text>
+                                <View style={stylesheet.view6}>
+                                    <Text style={stylesheet.text4}>{item.datetime}</Text>
+                                    {
+                                        item.side == "right" ?
+                                            <FontAwesome6 name="check" color={item.status == 1 ? "green" : "blue"} size={18} /> //green for delivered or unseen, blue for seen
+                                            : null
+                                    }
                                 </View>
-                        }
-                        estimatedItemSize={200}
-                    />
-
-                <View style={stylesheet.view5_2}>
-                    <Text style={stylesheet.text3}>Message</Text>
-                    <View style={stylesheet.view6}>
-                        <Text style={stylesheet.text4}>Oct 03, 12.30 PM</Text>
-                        {
-                            false ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
-                                : null
-                        }
-                    </View>
-                </View>
+                            </View>
+                    }
+                    estimatedItemSize={200}
+                />
             </View>
-            
+
 
             <View style={stylesheet.view7}>
                 <TextInput style={stylesheet.input1} />
@@ -197,7 +186,7 @@ const stylesheet = StyleSheet.create({
         justifyContent: "center",
         rowGap: 5,
         alignSelf: "flex-start",
-        
+
     },
     view6: {
         flexDirection: "row",
@@ -212,7 +201,7 @@ const stylesheet = StyleSheet.create({
         marginVertical: 20,
     },
     input1: {
-        
+
         height: 45,
         borderColor: "black",
         borderWidth: 1,
