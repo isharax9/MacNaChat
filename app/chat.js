@@ -7,6 +7,7 @@ import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { FlashList } from "@shopify/flash-list";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -76,16 +77,25 @@ export default function chat() {
 
 
             <View style={stylesheet.center_view}>
-                <View style={stylesheet.view5_1}>
-                    <Text style={stylesheet.text3}>Message</Text>
-                    <View style={stylesheet.view6}>
-                        <Text style={stylesheet.text4}>Oct 03, 10.30 PM</Text>
-                        {
-                            true ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
-                                : null
+
+                    <FlashList
+                        data={getChatArray}
+                        renderItem={
+
+                            ({item})=>
+                                <View style={stylesheet.view5_1}>
+                                    <Text style={stylesheet.text3}>Message</Text>
+                                    <View style={stylesheet.view6}>
+                                        <Text style={stylesheet.text4}>Oct 03, 10.30 PM</Text>
+                                        {
+                                            true ? <FontAwesome6 name="check" color={true ? "green" : "white"} size={18} />
+                                                : null
+                                        }
+                                    </View>
+                                </View>
                         }
-                    </View>
-                </View>
+                        estimatedItemSize={200}
+                    />
 
                 <View style={stylesheet.view5_2}>
                     <Text style={stylesheet.text3}>Message</Text>
