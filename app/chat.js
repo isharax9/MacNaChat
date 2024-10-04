@@ -68,16 +68,17 @@ export default function chat() {
                 <View style={stylesheet.view3}>
 
                     {
-                        true ? <Image style={stylesheet.image1}
-                            source={"https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/0710351156.png"}
+                        item.avatar_image_found == "true"
+                         ? <Image style={stylesheet.image1}
+                            source={"https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/"+item.other_user_mobile+".png"}
                             contentFit={"contain"} />
-                            : <Text style={stylesheet.text1}>SP</Text>
+                            : <Text style={stylesheet.text1}>{item.other_user_avatar_letters}</Text>
                     }
 
                 </View>
                 <View style={stylesheet.view4}>
-                    <Text style={stylesheet.text2}>Sahan Perera</Text>
-                    <Text style={stylesheet.text3_1}>Online</Text>
+                    <Text style={stylesheet.text2}>{item.other_user_name}</Text>
+                    <Text style={stylesheet.text3_1}>{item.other_user_status==1?"Online":"Offline"}</Text>
                 </View>
             </View>
 
