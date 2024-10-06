@@ -37,7 +37,7 @@ export default function Home() {
                 return;
             }
 
-            const response = await fetch("https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadHomeData?id=" + user.id);
+            const response = await fetch(process.env.EXPO_PUBLIC_URL+"/MacNaChat/LoadHomeData?id=" + user.id);
             if (response.ok) {
                 const json = await response.json();
                 if (json.success && isMounted.current) {
@@ -134,7 +134,7 @@ export default function Home() {
                             <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
                                 {item.avatar_image_found ? (
                                     <Image
-                                        source={{ uri: "https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }}
+                                        source={{ uri: process.env.EXPO_PUBLIC_URL+"/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }}
                                         style={styles.avatarImage}
                                         resizeMode="cover"
                                     />

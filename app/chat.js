@@ -39,7 +39,7 @@ export default function ChatScreen() {
                     return;
                 }
 
-                const response = await fetch(`https://cardinal-above-physically.ngrok-free.app/MacNaChat/LoadChat?logged_user_id=${user.id}&other_user_id=${item.other_user_id}`);
+                const response = await fetch(process.env.EXPO_PUBLIC_URL+`/MacNaChat/LoadChat?logged_user_id=${user.id}&other_user_id=${item.other_user_id}`);
                 if (response.ok) {
                     const chatArray = await response.json();
                     setChatArray(chatArray);
@@ -55,7 +55,7 @@ export default function ChatScreen() {
 
         const interval = setInterval(() => {
             fetchChatArray();
-        }, 1000);
+        }, 1000*60*5); // Refresh chat every 5 minutes
 
         return () => clearInterval(interval);
     }, [item.other_user_id]);
@@ -72,7 +72,7 @@ export default function ChatScreen() {
                 <View style={stylesheet.view3}>
                     {item.avatar_image_found == "true"
                         ? <Image style={stylesheet.image1}
-                            source={{ uri: `https://cardinal-above-physically.ngrok-free.app/MacNaChat/AvatarImages/${item.other_user_mobile}.png` }}
+                            source={{ uri: process.env.EXPO_PUBLIC_URL+`/MacNaChat/AvatarImages/${item.other_user_mobile}.png` }}
                             contentFit="contain" />
                         : <Text style={stylesheet.text1}>{item.other_user_avatar_letters}</Text>}
                 </View>
@@ -123,7 +123,7 @@ export default function ChatScreen() {
                         try {
                             let userJson = await AsyncStorage.getItem("user");
                             let user = JSON.parse(userJson);
-                            const response = await fetch(`https://cardinal-above-physically.ngrok-free.app/MacNaChat/SendChat?logged_user_id=${user.id}&other_user_id=${item.other_user_id}&message=${getChatText}`);
+                            const response = await fetch(process.env.EXPO_PUBLIC_URL+`/MacNaChat/SendChat?logged_user_id=${user.id}&other_user_id=${item.other_user_id}&message=${getChatText}`);
                             if (response.ok) {
                                 const json = await response.json();
                                 if (json.success) {

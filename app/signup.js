@@ -135,7 +135,7 @@ export default function signup() {
               console.log("SignUp Button pressed");
               try {
                 let response = await fetch(
-                  "https://cardinal-above-physically.ngrok-free.app/MacNaChat/SignUp",
+                  process.env.EXPO_PUBLIC_URL+"/MacNaChat/SignUp",
                   {
                     method: "POST",
                     body: formData

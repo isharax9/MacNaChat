@@ -89,7 +89,7 @@ export default function index() {
               console.log("Sign In button pressed");
               try {
                 let response = await fetch(
-                  "https://cardinal-above-physically.ngrok-free.app/MacNaChat/SignIn",
+                  process.env.EXPO_PUBLIC_URL+"/MacNaChat/SignIn",
                   {
                     method: "POST",
                     body: JSON.stringify({
