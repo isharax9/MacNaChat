@@ -65,6 +65,8 @@ const UserProfileScreen = () => {
                     <Text style={styles.label}>Registered On:</Text>
                     <Text style={styles.value}>{userData.registered_date_time}</Text>
 
+                    <Text style={styles.label}>Status:</Text>
+                    <Text style={styles.value}>{"Online"}</Text>
                     {/* Add more fields as needed */}
                 </View>
             ) : (
