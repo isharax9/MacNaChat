@@ -19,7 +19,11 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/z.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO"
+      ],
+      "package": "com.macknight141.MacNaChat"
     },
     "web": {
       "favicon": "./assets/favicon.png"
@@ -33,6 +37,14 @@
         }
       ],
       "expo-router"
-    ]
+    ],
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "bfa46ef6-e1ff-40db-b54a-cb547e33067c"
+      }
+    }
   }
 }
