@@ -112,7 +112,7 @@ export default function Home() {
 
                 {showMenu && (
                     <View style={styles.menu}>
-                        <Pressable onPress={() => router.push("/about")}>
+                        <Pressable onPress={() => router.push("/aboutme")}>
                             <Text style={styles.menuItem}>About Me</Text>
                         </Pressable>
                         <Pressable onPress={handleSignOut}>
