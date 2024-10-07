@@ -1,7 +1,8 @@
-import { View, StyleSheet, Text, Image, ActivityIndicator, Pressable, Alert, RefreshControl } from "react-native";
+import { View, StyleSheet, Text, Image, ActivityIndicator, Pressable, Alert, RefreshControl, TouchableOpacity } from "react-native";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect, useState, useCallback, useRef } from "react";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { Ionicons } from '@expo/vector-icons'; // For three dots icon
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FlashList } from "@shopify/flash-list";
 import { StatusBar } from "expo-status-bar";
@@ -19,35 +20,29 @@ export default function Home() {
 
     const [getChatArray, setChatArray] = useState([]);
     const [refreshing, setRefreshing] = useState(false);
-    const isMounted = useRef(true); // Use a ref to track component mount status
+    const [showMenu, setShowMenu] = useState(false); // For dropdown menu
+    const isMounted = useRef(true);
 
     const fetchData = useCallback(async () => {
         try {
             const userJson = await AsyncStorage.getItem("user");
             if (!userJson) {
-                console.log("User data not found in AsyncStorage");
                 if (isMounted.current) router.replace("/");
                 return;
             }
 
             const user = JSON.parse(userJson);
             if (!user || !user.id) {
-                console.log("Invalid user data:", user);
                 if (isMounted.current) router.replace("/");
                 return;
             }
 
-            const response = await fetch(process.env.EXPO_PUBLIC_URL+"/MacNaChat/LoadHomeData?id=" + user.id);
+            const response = await fetch(process.env.EXPO_PUBLIC_URL + "/MacNaChat/LoadHomeData?id=" + user.id);
             if (response.ok) {
                 const json = await response.json();
                 if (json.success && isMounted.current) {
-                    console.log("Chat Home fetched successfully.");
                     setChatArray(json.jsonChatArray);
-                } else {
-                    console.log("API returned success: false");
                 }
-            } else {
-                console.log("Error fetching data:", response.status);
             }
         } catch (err) {
             console.log("Error occurred:", err);
@@ -57,9 +52,8 @@ export default function Home() {
     useEffect(() => {
         isMounted.current = true;
         fetchData();
-
         return () => {
-            isMounted.current = false; // Cleanup on unmount
+            isMounted.current = false;
         };
     }, [fetchData]);
 
@@ -80,35 +74,17 @@ export default function Home() {
                 "Sign Out",
                 "Are you sure you want to sign out?",
                 [
-                    {
-                        text: "Cancel",
-                        style: "cancel",
-                    },
+                    { text: "Cancel", style: "cancel" },
                     {
                         text: "Sign Out",
                         onPress: async () => {
-                            try {
-                                const userJson = await AsyncStorage.getItem("user");
-                                if (!userJson) {
-                                    console.log("No user data found to sign out.");
-                                    return;
-                                }
+                            const userJson = await AsyncStorage.getItem("user");
+                            const user = JSON.parse(userJson);
+                            const response = await fetch(process.env.EXPO_PUBLIC_URL + "/MacNaChat/SignOut?userId=" + user.id, { method: "GET" });
 
-                                const user = JSON.parse(userJson);
-                                const response = await fetch(process.env.EXPO_PUBLIC_URL + "/MacNaChat/SignOut?userId=" + user.id, {
-                                    method: "GET",
-                                });
-
-                                if (response.ok) {
-                                    await AsyncStorage.removeItem("user");
-                                    if (isMounted.current) router.replace("/"); // Only navigate if component is mounted
-                                } else {
-                                    console.log("Error signing out:", response.status);
-                                    Alert.alert("Sign Out Error", "An error occurred during sign out. Please try again.");
-                                }
-                            } catch (err) {
-                                console.log("Error during sign out:", err);
-                                Alert.alert("Sign Out Error", "An error occurred during sign out. Please try again.");
+                            if (response.ok) {
+                                await AsyncStorage.removeItem("user");
+                                if (isMounted.current) router.replace("/");
                             }
                         },
                     },
@@ -116,7 +92,7 @@ export default function Home() {
                 { cancelable: true }
             );
         } catch (err) {
-            console.log("Error signing out:", err);
+            console.log("Error during sign out:", err);
         }
     };
 
@@ -128,53 +104,55 @@ export default function Home() {
         <View style={styles.mainContainer}>
             <StatusBar hidden={false} />
             <View style={styles.header}>
-                <Pressable onPress={handleSignOut}>
-                    <Text style={styles.title}>MacNa Chat</Text>
-                </Pressable>
+                <Text style={styles.title}>MacNa Chat</Text>
+                {/* Three dots for dropdown menu */}
+                <TouchableOpacity onPress={() => setShowMenu(!showMenu)} style={styles.menuButton}>
+                    <Ionicons name="ellipsis-vertical" size={24} color="black" />
+                </TouchableOpacity>
+
+                {showMenu && (
+                    <View style={styles.menu}>
+                        <Pressable onPress={() => router.push("/about")}>
+                            <Text style={styles.menuItem}>About Me</Text>
+                        </Pressable>
+                        <Pressable onPress={handleSignOut}>
+                            <Text style={styles.menuItem}>Logout</Text>
+                        </Pressable>
+                    </View>
+                )}
             </View>
+
             {getChatArray.length > 0 ? (
                 <FlashList
                     data={getChatArray}
                     renderItem={({ item }) => (
-                        <Pressable style={styles.chatRow} onPress={() => {
-                            router.push({
-                                pathname: "/chat",
-                                params: item
-                            });
-                        }}>
-                            <View style={item.other_user_status === 1 ? styles.onlineStatus : styles.offlineStatus}>
+                        <Pressable style={styles.chatRow} onPress={() => router.push({ pathname: "/chat", params: item })}>
+                            <View style={styles.avatarContainer}>
                                 {item.avatar_image_found ? (
-                                    <Image
-                                        source={{ uri: process.env.EXPO_PUBLIC_URL+"/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }}
-                                        style={styles.avatarImage}
-                                        resizeMode="cover"
-                                    />
+                                    <Image source={{ uri: process.env.EXPO_PUBLIC_URL + "/MacNaChat/AvatarImages/" + item.other_user_mobile + ".png" }} style={styles.avatarImage} />
                                 ) : (
                                     <Text style={styles.avatarLetters}>{item.other_user_avatar_letters}</Text>
                                 )}
+
+                                {/* Online/Offline status */}
+                                <Text style={item.other_user_status === 1 ? styles.onlineText : styles.offlineText}>
+                                    {item.other_user_status === 1 ? "online" : "offline"}
+                                </Text>
                             </View>
 
                             <View style={styles.chatInfo}>
                                 <Text style={styles.userName}>{item.other_user_name}</Text>
-                                <Text style={styles.messagePreview} numberOfLines={1}>
-                                    {item.message}
-                                </Text>
+                                <Text style={styles.messagePreview} numberOfLines={1}>{item.message}</Text>
                             </View>
 
                             <View style={styles.chatMeta}>
                                 <Text style={styles.time}>{item.dateTime}</Text>
-                                <FontAwesome6
-                                    name={item.chat_status_id != 1 ? "check" : "check-double"}
-                                    color={item.chat_status_id === 1 ? "blue" : "grey"}
-                                    size={16}
-                                />
+                                <FontAwesome6 name={item.chat_status_id !== 1 ? "check" : "check-double"} color={item.chat_status_id === 1 ? "blue" : "grey"} size={16} />
                             </View>
                         </Pressable>
                     )}
                     estimatedItemSize={200}
-                    refreshControl={
-                        <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
-                    }
+                    refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} />}
                 />
             ) : (
                 <Text style={styles.noChatsText}>No chats available</Text>
@@ -191,12 +169,37 @@ const styles = StyleSheet.create({
         backgroundColor: "#f9f9f9",
     },
     header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
         paddingVertical: 10,
     },
     title: {
         fontSize: 24,
         color: "#000",
         fontFamily: 'PressStart2P-Regular',
+    },
+    menuButton: {
+        padding: 10,
+    },
+    menu: {
+        position: "absolute",
+        zIndex: 1,
+        right: 10,
+        top: 50,
+        backgroundColor: "#fff",
+        borderRadius: 5,
+        padding: 10,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    menuItem: {
+        paddingVertical: 10,
+        color: "#333",
+        fontSize: 16,
     },
     chatRow: {
         flexDirection: "row",
@@ -206,25 +209,36 @@ const styles = StyleSheet.create({
         borderBottomWidth: 1,
         borderColor: "#eee",
     },
-    onlineStatus: {
+    avatarContainer: {
         width: 50,
         height: 50,
-        backgroundColor: "white",
-        borderRadius: 25,
-        borderWidth: 2,
-        borderColor: "green",
-        justifyContent: "center",
         alignItems: "center",
     },
-    offlineStatus: {
-        width: 50,
-        height: 50,
-        backgroundColor: "white",
-        borderRadius: 25,
-        borderWidth: 2,
-        borderColor: "grey",
-        justifyContent: "center",
-        alignItems: "center",
+    onlineText: {
+        fontSize: 10,
+        color: "white",
+        backgroundColor: "green",
+        borderWidth: 0,
+        borderColor: "green",
+        padding: 2,
+        borderRadius: 6,
+        position: "absolute",
+        bottom: -7,
+        
+        
+        
+    },
+    offlineText: {
+        fontSize: 10,
+        color: "white",
+        backgroundColor: "gray",
+        borderWidth: 0,
+        borderColor: "gray",
+        padding: 2,
+        borderRadius: 6,
+        position: "absolute",
+        bottom: -7,
+
     },
     avatarImage: {
         width: 46,
@@ -232,8 +246,14 @@ const styles = StyleSheet.create({
         borderRadius: 23,
     },
     avatarLetters: {
+        width: 46,
+        height: 46,
         fontSize: 18,
         color: "#333",
+        borderRadius: 23,
+        backgroundColor: "#eee",
+        textAlign: "center",
+        lineHeight: 46,
     },
     chatInfo: {
         flex: 1,

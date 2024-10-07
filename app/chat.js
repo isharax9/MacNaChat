@@ -192,7 +192,7 @@ const stylesheet = StyleSheet.create({
     text3_1: {
         fontFamily: 'SourceCodePro-Regular',
         fontSize: 14,
-        color: "green",
+        color: "black",
     },
     text4: {
         fontFamily: 'SourceCodePro-Light',
