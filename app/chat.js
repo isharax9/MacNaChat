@@ -93,7 +93,7 @@ export default function ChatScreen() {
                                 {item.side == "right" && (
                                     <FontAwesome6
                                         name={item.status != 1 ? "check" : "check-double"}
-                                        color={item.status != 1 ? "green" : "blue"}
+                                        color={item.status != 1 ? "gray" : "#0066ff"}
                                         size={18}
                                     />
                                 )}

@@ -147,7 +147,7 @@ export default function Home() {
 
                             <View style={styles.chatMeta}>
                                 <Text style={styles.time}>{item.dateTime}</Text>
-                                <FontAwesome6 name={item.chat_status_id !== 1 ? "check" : "check-double"} color={item.chat_status_id === 1 ? "blue" : "grey"} size={16} />
+                                <FontAwesome6 name={item.chat_status_id !== 1 ? "check" : "check-double"} color={item.chat_status_id === 1 ? "#0066ff" : "grey"} size={16} />
                             </View>
                         </Pressable>
                     )}
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
     onlineText: {
         fontSize: 10,
         color: "white",
-        backgroundColor: "green",
+        backgroundColor: "#0099ff",
         borderWidth: 0,
         borderColor: "green",
         padding: 2,
