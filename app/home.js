@@ -93,8 +93,19 @@ export default function Home() {
                                     console.log("No user data found to sign out.");
                                     return;
                                 }
-                                await AsyncStorage.removeItem("user");
-                                if (isMounted.current) router.replace("/"); // Only navigate if component is mounted
+
+                                const user = JSON.parse(userJson);
+                                const response = await fetch(process.env.EXPO_PUBLIC_URL + "/MacNaChat/SignOut?userId=" + user.id, {
+                                    method: "GET",
+                                });
+
+                                if (response.ok) {
+                                    await AsyncStorage.removeItem("user");
+                                    if (isMounted.current) router.replace("/"); // Only navigate if component is mounted
+                                } else {
+                                    console.log("Error signing out:", response.status);
+                                    Alert.alert("Sign Out Error", "An error occurred during sign out. Please try again.");
+                                }
                             } catch (err) {
                                 console.log("Error during sign out:", err);
                                 Alert.alert("Sign Out Error", "An error occurred during sign out. Please try again.");
