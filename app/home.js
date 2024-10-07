@@ -142,7 +142,9 @@ export default function Home() {
 
                             <View style={styles.chatInfo}>
                                 <Text style={styles.userName}>{item.other_user_name}</Text>
-                                <Text style={styles.messagePreview} numberOfLines={1}>{item.message}</Text>
+                                <Text style={[styles.messagePreview, item.chat_status_id !== 1 && styles.unreadMessage]} numberOfLines={1}>
+                                    {item.message}
+                                </Text>
                             </View>
 
                             <View style={styles.chatMeta}>
@@ -224,9 +226,6 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         position: "absolute",
         bottom: -7,
-        
-        
-        
     },
     offlineText: {
         fontSize: 10,
@@ -238,7 +237,6 @@ const styles = StyleSheet.create({
         borderRadius: 6,
         position: "absolute",
         bottom: -7,
-
     },
     avatarImage: {
         width: 46,
@@ -268,6 +266,12 @@ const styles = StyleSheet.create({
         fontSize: 14,
         color: "#555",
     },
+    unreadMessage: {
+        fontSize: 14,
+        fontWeight: "bold",
+        color: "black",
+        fontFamily: 'SourceCodePro-Bold',  
+    },
     chatMeta: {
         alignItems: "flex-end",
     },
@@ -281,5 +285,5 @@ const styles = StyleSheet.create({
         textAlign: "center",
         marginTop: 50,
         color: "grey",
-    },
+    },    
 });

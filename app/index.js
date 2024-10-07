@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Alert, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome6, Ionicons } from "@expo/vector-icons";
 import { registerRootComponent } from 'expo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -16,6 +16,7 @@ export default function index() {
 
   const [getmobile, setMobile] = useState("");
   const [getpassword, setPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
 
   const [loaded, error] = useFonts({
     'SourceCodePro-Bold': require('../assets/fonts/static/SourceCodePro-Bold.ttf'),
@@ -70,11 +71,25 @@ export default function index() {
           <TextInput
             style={[styles.input, focusedInput === 'password' && styles.inputFocused]}
             placeholder="Password"
-            secureTextEntry={true}
+            secureTextEntry={!showPassword}
             onFocus={() => setFocusedInput('password')}
             onBlur={() => setFocusedInput(null)}
             onChangeText={(text) => setPassword(text)}
           />
+
+          <TouchableOpacity
+            style={styles.showPasswordToggle}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <View style={styles.showPasswordToggleContent}>
+            <Ionicons
+              name={showPassword ? 'eye-off-outline' : 'eye-outline'}
+              size={24}
+              color="gray"
+            />
+            <Text>{showPassword ? 'Hide Password' : 'Show Password'}</Text>
+            </View>
+          </TouchableOpacity>
 
           <Pressable
             style={styles.buttonContainer}
@@ -148,6 +163,20 @@ const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: '#fff',
+  },
+  showPasswordToggleContent: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    columnGap: 5,
+  },
+  showPasswordToggle: {
+    
+    right: 5,
+    top: -10,
+    zIndex: 1,
+    backgroundColor: 'transparent',
+    padding: 5,
+    borderRadius: 5,
   },
   scrollViewContent: {
     flexGrow: 1,
