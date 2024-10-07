@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useFonts } from 'expo-font';
-import { View, Text, TextInput, StyleSheet, Pressable, ScrollView,Alert } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, ScrollView, Alert } from 'react-native';
 import { SafeAreaView } from 'react-native';
 import { Image } from 'expo-image';
 import * as SplashScreen from 'expo-splash-screen';
-import {FontAwesome6} from "@expo/vector-icons";
+import { FontAwesome6 } from "@expo/vector-icons";
 import { registerRootComponent } from 'expo';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { router } from 'expo-router';
@@ -13,8 +13,6 @@ import { StatusBar } from 'expo-status-bar';
 SplashScreen.preventAutoHideAsync();
 
 export default function index() {
-
-  // console.log("index");
 
   const [getmobile, setMobile] = useState("");
   const [getpassword, setPassword] = useState("");
@@ -26,11 +24,10 @@ export default function index() {
   });
 
   useEffect(() => {
-    // console.log("Checking user...");
     const checkUser = async () => {
       try {
         const user = await AsyncStorage.getItem('user');
-        if (user!== null) {
+        if (user !== null) {
           router.replace('/home');
         }
       } catch (error) {
@@ -44,20 +41,16 @@ export default function index() {
   const [focusedInput, setFocusedInput] = useState();
 
   useEffect(() => {
-
-    // console.log("splash screen");
     if (loaded || error) {
       SplashScreen.hideAsync();
     }
   }, [loaded, error]);
 
   if (!loaded && !error) {
-    // console.log("last");
     return null;
   }
 
   return (
-    
     <SafeAreaView style={styles.safeArea}>
       <StatusBar translucent={true} backgroundColor="transparent" />
       <ScrollView contentContainerStyle={styles.scrollViewContent}>
@@ -85,11 +78,11 @@ export default function index() {
 
           <Pressable
             style={styles.buttonContainer}
-            onPress={async () => {              
+            onPress={async () => {
               console.log("Sign In button pressed");
               try {
                 let response = await fetch(
-                  process.env.EXPO_PUBLIC_URL+"/MacNaChat/SignIn",
+                  process.env.EXPO_PUBLIC_URL + "/MacNaChat/SignIn",
                   {
                     method: "POST",
                     body: JSON.stringify({
@@ -101,26 +94,25 @@ export default function index() {
                     }
                   }
                 );
-          
+
                 if (response.ok) {
                   let json = await response.json();
                   if (json.success) {
-                    // User signed in successfully
                     let user = json.user;
-                    Alert.alert("Success", "Hi " + user.first_name + " " + user.last_name + ", " + json.message);
-                    
-                    console.log("User signed in successfully");
 
-                    // Save user data to AsyncStorage
+                    // User signed in successfully, save userId and other details in AsyncStorage
                     try {
-                      await AsyncStorage.setItem("user", JSON.stringify(user));
-                      router.replace("/home");
+                      await AsyncStorage.setItem("userId", JSON.stringify(user));  // Save userId separately
+                      await AsyncStorage.setItem("user", JSON.stringify(user));  // Save entire user object
+
+                      Alert.alert("Success", "Hi " + user.first_name + " " + user.last_name + ", " + json.message);
                       console.log("User data saved to AsyncStorage");
+
+                      router.replace("/home");
                       console.log("User Redirected to Home Screen");
                     } catch (error) {
                       console.error("Error saving user data to AsyncStorage:", error);
                     }
-
 
                   } else {
                     Alert.alert("Error", json.message);
@@ -132,18 +124,16 @@ export default function index() {
                 Alert.alert("Error", "Network error occurred");
               }
             }}
-              >
-              <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
-              <Text style={styles.buttontext}>SIGN IN</Text>
-              </Pressable>
+          >
+            <FontAwesome6 name={"arrow-right-to-bracket"} color="white" size={20} />
+            <Text style={styles.buttontext}>SIGN IN</Text>
+          </Pressable>
 
-              <Pressable
-              style={styles.signUpButton}
-              onPress={() => {
-                router.replace("/signup");
+          <Pressable
+            style={styles.signUpButton}
+            onPress={() => {
+              router.replace("/signup");
               console.log("Sign Up button pressed");
-
-              // Add navigation to sign up page here
             }}
           >
             <Text style={styles.signUpText}>Don't have an account? Sign Up here</Text>
@@ -153,9 +143,6 @@ export default function index() {
     </SafeAreaView>
   );
 }
-
-
-
 
 const styles = StyleSheet.create({
   safeArea: {

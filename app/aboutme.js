@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserProfileScreen = () => {
     const [userData, setUserData] = useState(null);
@@ -7,20 +8,19 @@ const UserProfileScreen = () => {
     const [error, setError] = useState(null);
 
     useEffect(() => {
-        // Fetch user profile data from the backend
+        // Fetch user profile data from AsyncStorage
         const fetchUserProfile = async () => {
             try {
-                const userId = '1';  // replace with actual userId, e.g., from context or async storage
-                const response = await fetch(`https://hyena-brave-python.ngrok-free.app/MacNaChat/UserProfile?userId=${userId}`);
-                const data = await response.json();
-
-                if (data.success) {
-                    setUserData(data.user);
+                // Retrieve user data from AsyncStorage
+                const userJson = await AsyncStorage.getItem("user");
+                if (userJson) {
+                    const userData = JSON.parse(userJson);
+                    setUserData(userData);
                 } else {
-                    setError(data.message);
+                    setError('No user data found in AsyncStorage');
                 }
             } catch (err) {
-                setError('Failed to fetch user data');
+                setError('Failed to fetch user data from AsyncStorage');
             } finally {
                 setLoading(false);
             }
@@ -49,22 +49,21 @@ const UserProfileScreen = () => {
         <View style={styles.container}>
             {userData ? (
                 <View>
+                    <Text style={styles.title}>About Me</Text>
                     <Text style={styles.label}>First Name:</Text>
                     <Text style={styles.value}>{userData.first_name}</Text>
-                    
-                    <Text style={styles.label}>last Name:</Text>
-                    <Text style={styles.value}>{userData.last_name}</Text>
 
+                    <Text style={styles.label}>Last Name:</Text>
+                    <Text style={styles.value}>{userData.last_name}</Text>
 
                     <Text style={styles.label}>Password:</Text>
                     <Text style={styles.value}>{userData.password}</Text>
 
                     <Text style={styles.label}>Mobile:</Text>
                     <Text style={styles.value}>{userData.mobile}</Text>
-                    
+
                     <Text style={styles.label}>Registered On:</Text>
                     <Text style={styles.value}>{userData.registered_date_time}</Text>
-                    
 
                     {/* Add more fields as needed */}
                 </View>
@@ -82,6 +81,12 @@ const styles = StyleSheet.create({
         flex: 1,
         padding: 20,
         backgroundColor: '#f8f9fa',
+    },
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        color: '#2c3e50',
+        marginBottom: 20,
     },
     loadingContainer: {
         flex: 1,
