@@ -55,7 +55,7 @@ export default function ChatScreen() {
 
         const interval = setInterval(() => {
             fetchChatArray();
-        }, 1000*60*5); // Refresh chat every 5 minutes
+        }, 5000); // Refresh chat every 5 seconds
 
         return () => clearInterval(interval);
     }, [item.other_user_id]);
